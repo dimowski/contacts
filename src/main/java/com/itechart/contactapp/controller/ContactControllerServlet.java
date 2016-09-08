@@ -1,5 +1,7 @@
-package com.itechart.contactapp;
+package com.itechart.contactapp.controller;
 
+import com.itechart.contactapp.model.Contact;
+import com.itechart.contactapp.dao.ContactDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 public class ContactControllerServlet extends HttpServlet {
 
-    private static final Logger log = LogManager.getLogger(ContactControllerServlet.class.getName());
+    private static final Logger log = LogManager.getLogger(ContactControllerServlet.class);
     private ContactDAO contactDAO;
 
     @Resource(name="jdbc/dmitry_kach_db")

@@ -7,12 +7,12 @@
   <display-name>Archetype Created Web Application</display-name>
 
   <welcome-file-list>
-    <welcome-file>ContactControllerServlet</welcome-file>
+    <welcome-file>main</welcome-file>
   </welcome-file-list>
 
   <servlet>
     <servlet-name>ContactControllerServlet</servlet-name>
-    <servlet-class>com.itechart.contactapp.ContactControllerServlet</servlet-class>
+    <servlet-class>com.itechart.contactapp.controller.ContactControllerServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

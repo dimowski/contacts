@@ -1,5 +1,6 @@
-package com.itechart.contactapp;
+package com.itechart.contactapp.dao;
 
+import com.itechart.contactapp.model.Contact;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class ContactDAO {
     private DataSource dataSource;
-    private static final Logger log = LogManager.getLogger(ContactDAO.class.getName());
+    private static final Logger log = LogManager.getLogger(ContactDAO.class);
 
     public ContactDAO(DataSource theDataSource) {
         dataSource = theDataSource;
@@ -40,12 +41,15 @@ public class ContactDAO {
                 String lastName = resultSet.getString("last_name");
                 String middleName = resultSet.getString("middle_name");
                 Date birthday = resultSet.getDate("birthday");
+                String status = resultSet.getString("status");
+                String gender = resultSet.getString("gender");
                 String citizenship = resultSet.getString("citizenship");
                 String webSite = resultSet.getString("web_site");
                 String email = resultSet.getString("email");
                 String jobCurrent = resultSet.getString("job_current");
 
-                Contact tempContact = new Contact(id, firstName, lastName, middleName, birthday, citizenship, webSite, email, jobCurrent);
+                Contact tempContact = new Contact(id, firstName, lastName, middleName, birthday, status, gender,
+                        citizenship, webSite, email, jobCurrent);
                 contacts.add(tempContact);
             }
             log.info("Size of list is = " + contacts.size());
