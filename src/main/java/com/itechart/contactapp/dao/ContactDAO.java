@@ -1,5 +1,6 @@
 package com.itechart.contactapp.dao;
 
+import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Contact;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,12 +32,12 @@ public class ContactDAO {
         try {
             log.info("Establishing connection to DB");
             connection = dataSource.getConnection();
-            String sql = "SELECT * FROM dmitry_kach_db.contacts";
+            String sql = "SELECT * FROM contacts c LEFT JOIN address a ON c.address_id=a.address_id LIMIT 10";
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                long id = resultSet.getInt("contact_id");
+                long contactId = resultSet.getInt("contact_id");
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
                 String middleName = resultSet.getString("middle_name");
@@ -48,11 +49,20 @@ public class ContactDAO {
                 String email = resultSet.getString("email");
                 String jobCurrent = resultSet.getString("job_current");
 
-                Contact tempContact = new Contact(id, firstName, lastName, middleName, birthday, status, gender,
-                        citizenship, webSite, email, jobCurrent);
+                long addressId = resultSet.getInt("address_id");
+                String country = resultSet.getString("country");
+                String city = resultSet.getString("city");
+                String street = resultSet.getString("street");
+                String house = resultSet.getString("house");
+                String zipCode = resultSet.getString("zip_code");
+
+                Address address = new Address(addressId, country, city, street, house, zipCode);
+
+                Contact tempContact = new Contact(contactId, firstName, lastName, middleName, birthday, status, gender,
+                        citizenship, webSite, email, jobCurrent, address);
                 contacts.add(tempContact);
             }
-            log.info("Size of list is = " + contacts.size());
+            log.info(contacts.size() + "contacts added");
             return contacts;
         } finally {
             close(connection, statement, resultSet);

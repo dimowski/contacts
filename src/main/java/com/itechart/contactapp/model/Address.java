@@ -29,14 +29,15 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", house='" + house + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                '}';
+        String[] fullAddress = {country, city, street, house};
+        String result = "";
+        String separator = "";
+        for (String s : fullAddress) {
+            if (s != null)
+                result += separator + s;
+            separator = ", ";
+        }
+        return result;
     }
 
     public long getId() {

@@ -21,14 +21,14 @@ public class Contact {
     private String webSite;
     private String email;
     private String jobCurrent;
-    private long addressId;
+    private Address address;
 
     private List<Phone> phones;
     private List<Attachment> attachments;
 
     public Contact(long id, String firstName, String lastName, String middleName, Date birthday, String status,
-                   String gender, String citizenship, String webSite, String email, String jobCurrent, long addressId,
-                   List<Phone> phones, List<Attachment> attachments) {
+                   String gender, String citizenship, String webSite, String email, String jobCurrent,
+                   Address address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,13 +40,11 @@ public class Contact {
         this.webSite = webSite;
         this.email = email;
         this.jobCurrent = jobCurrent;
-        this.addressId = addressId;
-        this.phones = phones;
-        this.attachments = attachments;
+        this.address = address;
     }
 
     public Contact(String firstName, String lastName, String middleName, Date birthday, String status, String gender,
-                   String citizenship, String webSite, String email, String jobCurrent, long addressId,
+                   String citizenship, String webSite, String email, String jobCurrent, Address address,
                    List<Phone> phones, List<Attachment> attachments) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -58,7 +56,7 @@ public class Contact {
         this.webSite = webSite;
         this.email = email;
         this.jobCurrent = jobCurrent;
-        this.addressId = addressId;
+        this.address = address;
         this.phones = phones;
         this.attachments = attachments;
     }
@@ -77,7 +75,7 @@ public class Contact {
                 ", webSite='" + webSite + '\'' +
                 ", email='" + email + '\'' +
                 ", jobCurrent='" + jobCurrent + '\'' +
-                ", addressId=" + addressId +
+                ", address=" + address +
                 ", phones=" + phones +
                 ", attachments=" + attachments +
                 '}';
@@ -171,12 +169,12 @@ public class Contact {
         this.jobCurrent = jobCurrent;
     }
 
-    public long getAddressId() {
-        return addressId;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddressId(long addressId) {
-        this.addressId = addressId;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public List<Phone> getPhones() {

@@ -49,7 +49,7 @@ public class ContactControllerServlet extends HttpServlet {
 
         req.setAttribute("CONTACT_LIST", contacts);
 
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/list-contacts.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/list-contact.jsp");
         dispatcher.forward(req, resp);
     }
 }
