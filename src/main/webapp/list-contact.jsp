@@ -29,6 +29,7 @@
         </div>
     </nav>
 
+    <div class="page-header"><h3>Список контактов</h3></div>
     <!-------- Table -------->
     <div class="panel panel-default">
         <div class="panel-heading">
