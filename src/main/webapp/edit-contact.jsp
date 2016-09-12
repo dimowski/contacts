@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -61,44 +62,137 @@
                 </li>
             </ul>
 
-            <div id="content_1" class="tabcontent" style="padding-top: 20px">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Персональная информация</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-4 text-muted">
-                                <div class="profile-text">Имя:</div>
-                                <div class="profile-text">Фамилия:</div>
-                                <div class="profile-text">Отчество:</div>
-                                <div class="profile-text">Дата рождения:</div>
-                                <div class="profile-text">Пол:</div>
-                                <div class="profile-text">Гражданство:</div>
-                                <div class="profile-text">Семейное положение:</div>
-                                <div class="profile-text">Web site:</div>
-                                <div class="profile-text">Email:</div>
-                                <div class="profile-text">Место работы:</div>
+            <form class="form-horizontal">
+                <div id="content_1" class="tabcontent" style="padding-top: 20px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Персональная информация</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="firstName" class="col-sm-3 control-label">Имя</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="Иван" class="form-control" id="firstName"
+                                           placeholder="Имя">
+                                </div>
                             </div>
-                            <div class="col-sm-8">
-                                <div class="profile-text">Иван</div>
-                                <div class="profile-text">Иванов</div>
-                                <div class="profile-text">Иванович</div>
-                                <div class="profile-text">06/06/1986</div>
-                                <div class="profile-text">М</div>
+                            <div class="form-group">
+                                <label for="lastName" class="col-sm-3 control-label">Фамилия</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="Иванов" class="form-control" id="lastName"
+                                           placeholder="Фамилия">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="midleName" class="col-sm-3 control-label">Отчество</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="Иванович" class="form-control" id="midleName"
+                                           placeholder="Отчество">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="birthday" class="col-sm-3 control-label">Дата рождения</label>
+                                <div class="col-sm-4">
+                                    <input type="date" value="1955-05-06" class="form-control" id="birthday"
+                                           placeholder="Дата рождения">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender" class="col-sm-3 control-label">Пол</label>
+                                <div class="col-sm-4">
+                                    <select id="gender" class="form-control">
+                                        <option selected="selected">М</option>
+                                        <option>Ж</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="citizenship" class="col-sm-3 control-label">Гражданство</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="США" class="form-control" id="citizenship"
+                                           placeholder="Гражданство">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="status" class="col-sm-3 control-label">Семейное положение</label>
+                                <div class="col-sm-4">
+                                    <select id="status" class="form-control">
+                                        <option selected="selected">женат</option>
+                                        <option>холост</option>
+                                        <option>замужем</option>
+                                        <option>не замужем</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label">Email</label>
+                                <div class="col-sm-4">
+                                    <input type="email" value="vvv@gmail.com" class="form-control" id="email"
+                                           placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="jobCurrent" class="col-sm-3 control-label">Место работы</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="Google inc." class="form-control" id="jobCurrent"
+                                           placeholder="Место работы">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="content_2" class="tabcontent" style="display:none;">
-                2
-            </div>
+                <div id="content_2" class="tabcontent" style="display:none; padding-top: 20px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-xs-4">
+                                    <p class="panel-title">Всего телефонов: 8</p>
+                                </div>
+                                <div class="col col-xs-8 text-right">
+                                    <button type="button" class="btn btn-sm btn-primary">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
+                                        телефон
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-            <div id="content_3" class="tabcontent" style="display:none;">
-                3
-            </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkAll"></th>
+                                    <th>Телефонный номер</th>
+                                    <th>Тип</th>
+                                    <th>Комментарий</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr>
+                                        <td><input type="checkbox" name="phone"></td>
+                                        <td><a href="#">46546546</a> </td>
+                                        <td>мобильный</td>
+                                        <td>Тут типо коммент</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="content_3" class="tabcontent" style="display:none;">
+
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
+            </form>
         </div>
     </div>
 </div>
