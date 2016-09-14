@@ -6,6 +6,7 @@
     <title>Contacts</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/checkall.js"></script>
 </head>
 <body>
 <div class="container">
@@ -19,7 +20,8 @@
             </div>
             <ul class="nav navbar-nav">
                 <li class="active">
-                    <a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Список контактов
+                    <a href="main"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Список
+                        контактов
                         <span class="sr-only">(current)</span></a>
                 </li>
                 <li>
@@ -35,18 +37,18 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col col-xs-4">
-                    <p class="panel-title">Всего контактов: 23</p>
+                    <p class="panel-title">Всего контактов: ${CONTACTS_COUNT}</p>
                 </div>
                 <div class="col col-xs-8 text-right">
-                    <button type="button" class="btn btn-sm btn-primary btn-create">
+                    <a type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить контакт
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary btn-create">
+                    </a>
+                    <a type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary btn-create">
+                    </a>
+                    <a href="main?command=delete" type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -54,7 +56,7 @@
             <table class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th><input type="checkbox" name="checkAll"/></th>
+                    <th><input type="checkbox" id="checkAll" onclick="checkAll(this)" class="pull-right"/></th>
                     <th>Полное имя</th>
                     <th>Дата рождения</th>
                     <th>Адрес</th>
@@ -62,10 +64,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="tempContact" items="${CONTACT_LIST}">
+                <c:forEach var="tempContact" items="${CONTACT_LIST.values()}">
                     <tr>
-                        <td><input type="checkbox" name="myTextEditBox"/></td>
-                        <td><a href="edit-contact.jsp">${tempContact.firstName} ${tempContact.middleName} ${tempContact.lastName}</a>
+                        <td><input type="checkbox" name="check_${tempContact.id}" class="pull-right"/></td>
+                        <td>
+                            <c:url var="editLink" value="main">
+                                <c:param name="command" value="edit"/>
+                                <c:param name="contactId" value="${tempContact.id}"/>
+                            </c:url>
+                            <a href="${editLink}">${tempContact.firstName} ${tempContact.middleName} ${tempContact.lastName}</a>
                         </td>
                         <td>
                             <span class="glyphicon glyphicon-calendar" style="color:lightgray; font-size: 80%"
@@ -82,29 +89,56 @@
             <div class="panel-footer">
                 <div class="row center-block">
                     <nav aria-label="Page navigation" class="pull-right">
-                        <ul class="pagination">
-                            <li>
-                                <a href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">6</a></li>
-                            <li><a href="#">7</a></li>
-                            <li><a href="#">8</a></li>
-                            <li>
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
+                        <c:if test="${PAGES_COUNT > 1}">
+                            <ul class="pagination">
+                                <c:choose>
+                                    <c:when test="${CURRENT_PAGE != 1}">
+                                        <li>
+                                            <a href="main?command=list&targetPage=prev" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    </c:when>
+                                    <c:when test="${CURRENT_PAGE == 1}">
+                                        <li class="disabled">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </li>
+                                    </c:when>
+                                </c:choose>
+                                <c:forEach var="i" begin="1" end="${PAGES_COUNT}">
+                                    <c:url var="targetPage" value="main">
+                                        <c:param name="command" value="list"/>
+                                        <c:param name="targetPage" value="${i}"/>
+                                    </c:url>
+                                    <c:choose>
+                                        <c:when test="${CURRENT_PAGE == i}">
+                                            <li class="active"><a href="${targetPage}">${i}</a></li>
+                                        </c:when>
+                                        <c:when test="${CURRENT_PAGE != i}">
+                                            <li><a href="${targetPage}">${i}</a></li>
+                                        </c:when>
+                                    </c:choose>
+                                </c:forEach>
+                                <c:choose>
+                                    <c:when test="${CURRENT_PAGE != PAGES_COUNT}">
+                                        <li>
+                                            <a href="main?command=list&targetPage=next" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </c:when>
+                                    <c:when test="${CURRENT_PAGE == PAGES_COUNT}">
+                                        <li class="disabled">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </li>
+                                    </c:when>
+                                </c:choose>
+                            </ul>
+                        </c:if>
                     </nav>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

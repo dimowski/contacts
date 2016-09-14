@@ -8,22 +8,26 @@ public class Address {
     private String city;
     private String street;
     private String house;
+    private String flat;
+
     private String zipCode;
 
-    public Address(long id, String country, String city, String street, String house, String zipCode) {
+    public Address(long id, String country, String city, String street, String house, String flat, String zipCode) {
         this.id = id;
         this.country = country;
         this.city = city;
         this.street = street;
         this.house = house;
+        this.flat = flat;
         this.zipCode = zipCode;
     }
 
-    public Address(String country, String city, String street, String house, String zipCode) {
+    public Address(String country, String city, String street, String house, String flat,String zipCode) {
         this.country = country;
         this.city = city;
         this.street = street;
         this.house = house;
+        this.flat = flat;
         this.zipCode = zipCode;
     }
 
@@ -78,6 +82,14 @@ public class Address {
 
     public void setHouse(String house) {
         this.house = house;
+    }
+
+    public String getFlat() {
+        return flat;
+    }
+
+    public void setFlat(String flat) {
+        this.flat = flat;
     }
 
     public String getZipCode() {

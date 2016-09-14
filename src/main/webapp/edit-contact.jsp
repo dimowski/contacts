@@ -32,12 +32,17 @@
     </nav>
 
     <!----- Main content ------>
-    <div class="page-header"><h3>Иванов Иван Иванович</h3></div>
+    <div class="page-header"><h3>${CONTACT.firstName} ${CONTACT.lastName} ${CONTACT.middleName}</h3></div>
     <div class="row">
         <div class="col-sm-3">
             <div class="image-upload" style="display: inline-block">
                 <label for="file-input">
-                    <img src="images/defaultUserIcon.png"/>
+                    <c:if test="${empty CONTACT.photo}">
+                        <img src="images/defaultUserIcon.png" alt="Profile photo"/>
+                    </c:if>
+                    <c:if test="${not empty CONTACT.photo}">
+                        <img class="contact-photo" src="<c:out value="${CONTACT.photo}"/>" alt="Profile photo"/>
+                    </c:if>
                 </label>
                 <input type="file" accept="image/*" id="file-input"/>
             </div>
@@ -72,28 +77,28 @@
                             <div class="form-group">
                                 <label for="firstName" class="col-sm-3 control-label">Имя</label>
                                 <div class="col-sm-4">
-                                    <input type="text" value="Иван" class="form-control" id="firstName"
+                                    <input type="text" value="${CONTACT.firstName}" class="form-control" id="firstName"
                                            placeholder="Имя">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="lastName" class="col-sm-3 control-label">Фамилия</label>
                                 <div class="col-sm-4">
-                                    <input type="text" value="Иванов" class="form-control" id="lastName"
+                                    <input type="text" value="${CONTACT.lastName}" class="form-control" id="lastName"
                                            placeholder="Фамилия">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="midleName" class="col-sm-3 control-label">Отчество</label>
                                 <div class="col-sm-4">
-                                    <input type="text" value="Иванович" class="form-control" id="midleName"
+                                    <input type="text" value="${CONTACT.middleName}" class="form-control" id="midleName"
                                            placeholder="Отчество">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="birthday" class="col-sm-3 control-label">Дата рождения</label>
                                 <div class="col-sm-4">
-                                    <input type="date" value="1955-05-06" class="form-control" id="birthday"
+                                    <input type="date" value="${CONTACT.birthday}" class="form-control" id="birthday"
                                            placeholder="Дата рождения">
                                 </div>
                             </div>
@@ -109,7 +114,8 @@
                             <div class="form-group">
                                 <label for="citizenship" class="col-sm-3 control-label">Гражданство</label>
                                 <div class="col-sm-4">
-                                    <input type="text" value="США" class="form-control" id="citizenship"
+                                    <input type="text" value="${CONTACT.citizenship}" class="form-control"
+                                           id="citizenship"
                                            placeholder="Гражданство">
                                 </div>
                             </div>
@@ -127,14 +133,15 @@
                             <div class="form-group">
                                 <label for="email" class="col-sm-3 control-label">Email</label>
                                 <div class="col-sm-4">
-                                    <input type="email" value="vvv@gmail.com" class="form-control" id="email"
+                                    <input type="email" value="${CONTACT.email}" class="form-control" id="email"
                                            placeholder="Email">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="jobCurrent" class="col-sm-3 control-label">Место работы</label>
                                 <div class="col-sm-4">
-                                    <input type="text" value="Google inc." class="form-control" id="jobCurrent"
+                                    <input type="text" value="${CONTACT.jobCurrent}" class="form-control"
+                                           id="jobCurrent"
                                            placeholder="Место работы">
                                 </div>
                             </div>
@@ -173,12 +180,12 @@
                                 </thead>
                                 <tbody>
 
-                                    <tr>
-                                        <td><input type="checkbox" name="phone"></td>
-                                        <td><a href="#">46546546</a> </td>
-                                        <td>мобильный</td>
-                                        <td>Тут типо коммент</td>
-                                    </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="phone"></td>
+                                    <td><a href="#">46546546</a></td>
+                                    <td>мобильный</td>
+                                    <td>Тут типо коммент</td>
+                                </tr>
 
                                 </tbody>
                             </table>

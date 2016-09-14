@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Contact {
 
-    private long id;
+    private int id;
 
     private String firstName;
     private String lastName;
@@ -23,12 +23,14 @@ public class Contact {
     private String jobCurrent;
     private Address address;
 
+    private String photo;
+
     private List<Phone> phones;
     private List<Attachment> attachments;
 
-    public Contact(long id, String firstName, String lastName, String middleName, Date birthday, String status,
+    public Contact(int id, String firstName, String lastName, String middleName, Date birthday, String status,
                    String gender, String citizenship, String webSite, String email, String jobCurrent,
-                   Address address) {
+                   Address address, String photo) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,10 +43,11 @@ public class Contact {
         this.email = email;
         this.jobCurrent = jobCurrent;
         this.address = address;
+        this.photo = photo;
     }
 
     public Contact(String firstName, String lastName, String middleName, Date birthday, String status, String gender,
-                   String citizenship, String webSite, String email, String jobCurrent, Address address,
+                   String citizenship, String webSite, String email, String jobCurrent, Address address, String photo,
                    List<Phone> phones, List<Attachment> attachments) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -57,6 +60,7 @@ public class Contact {
         this.email = email;
         this.jobCurrent = jobCurrent;
         this.address = address;
+        this.photo = photo;
         this.phones = phones;
         this.attachments = attachments;
     }
@@ -76,16 +80,17 @@ public class Contact {
                 ", email='" + email + '\'' +
                 ", jobCurrent='" + jobCurrent + '\'' +
                 ", address=" + address +
+                ", photo='" + photo + '\'' +
                 ", phones=" + phones +
                 ", attachments=" + attachments +
                 '}';
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -175,6 +180,14 @@ public class Contact {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public List<Phone> getPhones() {

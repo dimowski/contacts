@@ -1,7 +1,12 @@
-.image-upload > input
-{
+.image-upload > input {
     display: none;
 }
+
 .profile-text {
     padding: 10px;
+}
+
+.contact-photo {
+    max-height: 200px;
+    max-width: 200px;
 }
