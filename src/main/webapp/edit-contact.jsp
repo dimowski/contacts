@@ -180,13 +180,16 @@
                                 </thead>
                                 <tbody>
 
-                                <tr>
-                                    <td><input type="checkbox" name="phone"></td>
-                                    <td><a href="#">46546546</a></td>
-                                    <td>мобильный</td>
-                                    <td>Тут типо коммент</td>
-                                </tr>
-
+                                <c:forEach var="tempPhone" items="${CONTACT.phones}">
+                                    <tr>
+                                        <td><input type="checkbox" name="phone"></td>
+                                        <td>
+                                            <a href="#">${tempPhone.countryCode}${tempPhone.operatorCode}${phoneNumber}</a>
+                                        </td>
+                                        <td>мобильный</td>
+                                        <td>Тут типо коммент</td>
+                                    </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>

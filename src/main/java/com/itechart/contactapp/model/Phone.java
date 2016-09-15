@@ -2,31 +2,29 @@ package com.itechart.contactapp.model;
 
 public class Phone {
 
-    private long id;
+    private int id;
 
     private String countryCode;
     private String operatorCode;
     private String phoneNumber;
 
-    private long contactId;
+    //private long contactId;
     private String phoneType;
     private String comments;
 
-    public Phone(long id, String countryCode, String operatorCode, String phoneNumber, long contactId, String phoneType, String comments) {
+    public Phone(int id, String countryCode, String operatorCode, String phoneNumber, String phoneType, String comments) {
         this.id = id;
         this.countryCode = countryCode;
         this.operatorCode = operatorCode;
         this.phoneNumber = phoneNumber;
-        this.contactId = contactId;
         this.phoneType = phoneType;
         this.comments = comments;
     }
 
-    public Phone(String countryCode, String operatorCode, String phoneNumber, long contactId, String phoneType, String comments) {
+    public Phone(String countryCode, String operatorCode, String phoneNumber, String phoneType, String comments) {
         this.countryCode = countryCode;
         this.operatorCode = operatorCode;
         this.phoneNumber = phoneNumber;
-        this.contactId = contactId;
         this.phoneType = phoneType;
         this.comments = comments;
     }
@@ -38,17 +36,16 @@ public class Phone {
                 ", countryCode='" + countryCode + '\'' +
                 ", operatorCode='" + operatorCode + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", contactId=" + contactId +
                 ", phoneType='" + phoneType + '\'' +
                 ", comments='" + comments + '\'' +
                 '}';
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -74,14 +71,6 @@ public class Phone {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public long getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(long contactId) {
-        this.contactId = contactId;
     }
 
     public String getPhoneType() {

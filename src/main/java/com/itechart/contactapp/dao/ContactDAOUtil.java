@@ -9,10 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ContactDAOUtil implements ContactDAO {
 
@@ -79,7 +77,36 @@ public class ContactDAOUtil implements ContactDAO {
 
     @Override
     public List<Phone> getPhonesByContactId(int contactId) {
-        return null;
+        List<Phone> phones = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM phone WHERE contact_id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, contactId);
+            resultSet = statement.executeQuery();
+
+            while(resultSet.next()) {
+                int id = resultSet.getInt("phone_id");
+                String countryCode = resultSet.getString("country_code");
+                String operatorCode = resultSet.getString("operator_code");
+                String phoneNumber = resultSet.getString("phone_number");
+                String phoneType = resultSet.getString("phone_type");
+                String comments = resultSet.getString("comments");
+
+                Phone tempPhone = new Phone(id, countryCode, operatorCode, phoneNumber, phoneType, comments);
+                phones.add(tempPhone);
+            }
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            close(connection, statement, resultSet);
+        }
+        return  phones;
     }
 
     @Override
