@@ -58,16 +58,21 @@ public class DefaultContactService implements ContactService {
     }
 
     @Override
+    public void deleteContact(HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
+    @Override
     public void fillContact(HttpServletRequest request, HttpServletResponse response) {
         int contactId = Integer.parseInt(request.getParameter("contactId"));
-        log.debug("contactId = {} for editing", contactId);
+        log.debug("contactId = {}", contactId);
 
         Map<Integer, Contact> tempList = (Map<Integer, Contact>) request.getSession().getAttribute("CONTACT_LIST");
 
         Contact theContact = tempList.get(contactId);
         log.debug(theContact);
         theContact.setPhones(contactDAO.getPhonesByContactId(contactId));
-        theContact.setAttachments(contactDAO.getAttachementsByContactId(contactId));
+        theContact.setAttachments(contactDAO.getAttachmentsByContactId(contactId));
 
         request.setAttribute("CONTACT", theContact);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/edit-contact.jsp");
@@ -76,6 +81,10 @@ public class DefaultContactService implements ContactService {
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    @Override
+    public void saveContact(HttpServletRequest request, HttpServletResponse response) {
     }
 
     @Override

@@ -56,18 +56,23 @@
                     </a>
                 </li>
                 <li role="presentation" class="tabmenu" id="tab_2">
-                    <a href="#" onclick="switchTab('phone_tab', 'content_2', 'tab_2');return false;" id="phone_tab">
-                        Контактные телефоны
+                    <a href="#" onclick="switchTab('profile_tab', 'content_2', 'tab_2');return false;" id="address_tab">
+                        Адрес
                     </a>
                 </li>
                 <li role="presentation" class="tabmenu" id="tab_3">
-                    <a href="#" onclick="switchTab('atchment_tab','content_3','tab_3');return false;" id="atcment_tab">
+                    <a href="#" onclick="switchTab('phone_tab', 'content_3', 'tab_3');return false;" id="phone_tab">
+                        Контактные телефоны
+                    </a>
+                </li>
+                <li role="presentation" class="tabmenu" id="tab_4">
+                    <a href="#" onclick="switchTab('atchment_tab','content_4','tab_4');return false;" id="atcment_tab">
                         Присоединения
                     </a>
                 </li>
             </ul>
 
-            <form class="form-horizontal">
+            <form class="form-horizontal" action="main?command=saveContact&contactId=${CONTACT.id}" method="get">
                 <div id="content_1" class="tabcontent" style="padding-top: 20px">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -78,14 +83,14 @@
                                 <label for="firstName" class="col-sm-3 control-label">Имя</label>
                                 <div class="col-sm-4">
                                     <input type="text" value="${CONTACT.firstName}" class="form-control" id="firstName"
-                                           placeholder="Имя">
+                                           placeholder="Имя" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="lastName" class="col-sm-3 control-label">Фамилия</label>
                                 <div class="col-sm-4">
                                     <input type="text" value="${CONTACT.lastName}" class="form-control" id="lastName"
-                                           placeholder="Фамилия">
+                                           placeholder="Фамилия" required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -147,14 +152,64 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- end of div id="content_1" -->
 
                 <div id="content_2" class="tabcontent" style="display:none; padding-top: 20px">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+                            <h3 class="panel-title">Адрес</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="country" class="col-sm-3 control-label">Страна</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="${CONTACT.address.country}" class="form-control"
+                                           id="country"
+                                           placeholder="Страна">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="city" class="col-sm-3 control-label">Город</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="${CONTACT.address.city}" class="form-control" id="city"
+                                           placeholder="Город">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="street" class="col-sm-3 control-label">Улица</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="${CONTACT.address.street}" class="form-control"
+                                           id="street"
+                                           placeholder="Улица">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="house" class="col-sm-3 control-label">Дом/Квартира</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="${CONTACT.address.house}" class="form-control"
+                                           id="house" placeholder="Дом">
+                                    <input type="text" value="${CONTACT.address.flat}" class="form-control"
+                                           id="flat" placeholder="Квартира">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode" class="col-sm-3 control-label">Индекс</label>
+                                <div class="col-sm-4">
+                                    <input type="text" value="${CONTACT.address.zipCode}" class="form-control"
+                                           id="zipCode"
+                                           placeholder="Почтовый индекс">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end of div id="content_2" -->
+
+                <div id="content_3" class="tabcontent" style="display:none; padding-top: 20px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
                             <div class="row">
                                 <div class="col col-xs-4">
-                                    <p class="panel-title">Всего телефонов: 8</p>
+                                    <p class="panel-title">Всего телефонов: ${CONTACT.phones.size()}</p>
                                 </div>
                                 <div class="col col-xs-8 text-right">
                                     <button type="button" class="btn btn-sm btn-primary">
@@ -167,27 +222,26 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered">
                                 <thead>
                                 <tr>
-                                    <th><input type="checkbox" name="checkAll"></th>
+                                    <th class="text-center"><input type="checkbox" name="checkAll"></th>
                                     <th>Телефонный номер</th>
                                     <th>Тип</th>
                                     <th>Комментарий</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 <c:forEach var="tempPhone" items="${CONTACT.phones}">
                                     <tr>
-                                        <td><input type="checkbox" name="phone"></td>
+                                        <td class="text-center"><input type="checkbox" name="phone"></td>
                                         <td>
-                                            <a href="#">${tempPhone.countryCode}${tempPhone.operatorCode}${phoneNumber}</a>
+                                            <a href="#">${tempPhone.countryCode} ${tempPhone.operatorCode}
+                                                    ${tempPhone.phoneNumber}</a>
                                         </td>
-                                        <td>мобильный</td>
-                                        <td>Тут типо коммент</td>
+                                        <td class="text-center">${tempPhone.phoneType}</td>
+                                        <td>${tempPhone.comments}</td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
@@ -195,12 +249,61 @@
                         </div>
 
                     </div>
-                </div>
+                </div> <!-- end of div id="content_3" -->
 
-                <div id="content_3" class="tabcontent" style="display:none;">
+                <div id="content_4" class="tabcontent" style="display:none; padding-top: 20px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-xs-4">
+                                    <p class="panel-title">Всего файлов: ${CONTACT.attachments.size()}</p>
+                                </div>
+                                <div class="col col-xs-8 text-right">
+                                    <button type="button" class="btn btn-sm btn-primary">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
+                                        файл
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Имя файла</th>
+                                    <th>Дата загрузки</th>
+                                    <th>Комментарий</th>
+                                    <th>Скачать</th>
+                                    <th>Удалить</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach var="tempAttachment" items="${CONTACT.attachments}">
+                                    <tr>
+                                        <td><a href="#">${tempAttachment.filename}</a></td>
+                                        <td class="text-center">${tempAttachment.uploadDate}</td>
+                                        <td>${tempAttachment.comments}</td>
+                                        <td class="text-center">
+                                            <a><span class="glyphicon glyphicon-download-alt"
+                                                     aria-hidden="true"></span></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a><span class="glyphicon glyphicon-remove red"
+                                                     aria-hidden="true"></span></a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> <!-- end of div id="content_4" -->
 
+                <input type="text" value="saveContact" name="command" hidden>
                 <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
             </form>
         </div>

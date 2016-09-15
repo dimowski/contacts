@@ -7,4 +7,6 @@ public interface ContactService {
     void listContacts(HttpServletRequest request, HttpServletResponse response);
     int getContactsCount();
     void fillContact(HttpServletRequest request, HttpServletResponse response);
+    void saveContact(HttpServletRequest request, HttpServletResponse response);
+    void deleteContact(HttpServletRequest request, HttpServletResponse response);
 }

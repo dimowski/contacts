@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/checkall.js"></script>
+    <script src="js/deleteContact.js"></script>
 </head>
 <body>
 <div class="container">
@@ -40,15 +41,15 @@
                     <p class="panel-title">Всего контактов: ${CONTACTS_COUNT}</p>
                 </div>
                 <div class="col col-xs-8 text-right">
-                    <a type="button" class="btn btn-sm btn-primary btn-create">
+                    <a href="edit-contact.jsp" type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить контакт
                     </a>
                     <a type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
                     </a>
-                    <a href="main?command=delete" type="button" class="btn btn-sm btn-primary btn-create">
+                    <button onclick="delCheckedContacts()" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -56,7 +57,7 @@
             <table class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th><input type="checkbox" id="checkAll" onclick="checkAll(this)" class="pull-right"/></th>
+                    <th class="text-center"><input type="checkbox" id="checkAll" onclick="checkAll(this)"/></th>
                     <th>Полное имя</th>
                     <th>Дата рождения</th>
                     <th>Адрес</th>
@@ -66,7 +67,7 @@
                 <tbody>
                 <c:forEach var="tempContact" items="${CONTACT_LIST.values()}">
                     <tr>
-                        <td><input type="checkbox" name="check_${tempContact.id}" class="pull-right"/></td>
+                        <td class="text-center"><input type="checkbox" name="${tempContact.id}"/></td>
                         <td>
                             <c:url var="editLink" value="main">
                                 <c:param name="command" value="edit"/>
@@ -74,7 +75,7 @@
                             </c:url>
                             <a href="${editLink}">${tempContact.firstName} ${tempContact.middleName} ${tempContact.lastName}</a>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <span class="glyphicon glyphicon-calendar" style="color:lightgray; font-size: 80%"
                                   aria-hidden="true"></span> ${tempContact.birthday}
                         </td>

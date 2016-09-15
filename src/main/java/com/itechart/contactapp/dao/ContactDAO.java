@@ -11,6 +11,6 @@ public interface ContactDAO {
     Map<Integer, Contact> getContacts(int page);
     int getContactsCount();
     List<Phone> getPhonesByContactId(int contactId);
-    List<Attachment> getAttachementsByContactId(int contactId);
+    List<Attachment> getAttachmentsByContactId(int contactId);
     //Address getContactById(int id);
 }

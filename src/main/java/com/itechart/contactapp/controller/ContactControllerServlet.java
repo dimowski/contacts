@@ -31,17 +31,24 @@ public class ContactControllerServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String theCommand = req.getParameter("command");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String theCommand = request.getParameter("command");
+        log.info("command ={}", theCommand);
         if (theCommand == null) {
             theCommand = "list";
         }
         switch (theCommand) {
             case "list":
-                contactService.listContacts(req, resp);
+                contactService.listContacts(request, response);
                 break;
             case "edit":
-                contactService.fillContact(req, resp);
+                contactService.fillContact(request, response);
+                break;
+            case "saveContact":
+                contactService.saveContact(request, response);
+                break;
+            case "deleteContact":
+                contactService.deleteContact(request, response);
                 break;
             default:
                 break;

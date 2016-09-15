@@ -32,10 +32,9 @@ public class ContactDAOUtil implements ContactDAO {
         try {
             log.info("Establishing connection to DB");
             connection = dataSource.getConnection();
-            String sql = "SELECT * FROM contacts c LEFT JOIN address a ON c.address_id=a.address_id " +
-                    "ORDER BY c.contact_id LIMIT 10 OFFSET ?";
+            String sql = "SELECT * FROM contacts ORDER BY contact_id LIMIT 10 OFFSET ?";
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, 10*(page - 1));
+            statement.setInt(1, 10 * (page - 1));
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
@@ -52,7 +51,6 @@ public class ContactDAOUtil implements ContactDAO {
                 String jobCurrent = resultSet.getString("job_current");
                 String photo = resultSet.getString("photo");
 
-                long addressId = resultSet.getInt("address_id");
                 String country = resultSet.getString("country");
                 String city = resultSet.getString("city");
                 String street = resultSet.getString("street");
@@ -60,7 +58,7 @@ public class ContactDAOUtil implements ContactDAO {
                 String flat = resultSet.getString("flat");
                 String zipCode = resultSet.getString("zip_code");
 
-                Address address = new Address(addressId, country, city, street, house, flat, zipCode);
+                Address address = new Address(0, country, city, street, house, flat, zipCode);
 
                 Contact tempContact = new Contact(contactId, firstName, lastName, middleName, birthday, status, gender,
                         citizenship, webSite, email, jobCurrent, address, photo);
@@ -90,7 +88,7 @@ public class ContactDAOUtil implements ContactDAO {
             statement.setInt(1, contactId);
             resultSet = statement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("phone_id");
                 String countryCode = resultSet.getString("country_code");
                 String operatorCode = resultSet.getString("operator_code");
@@ -106,12 +104,40 @@ public class ContactDAOUtil implements ContactDAO {
         } finally {
             close(connection, statement, resultSet);
         }
-        return  phones;
+        log.info(phones.size() + " phones retrieved");
+        return phones;
     }
 
     @Override
-    public List<Attachment> getAttachementsByContactId(int contactId) {
-        return null;
+    public List<Attachment> getAttachmentsByContactId(int contactId) {
+        List<Attachment> attachments = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM attachment WHERE contact_id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, contactId);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("attachment_id");
+                String filename = resultSet.getString("filename");
+                Date uploadDate = resultSet.getDate("upload_date");
+                String comments = resultSet.getString("comments");
+
+                Attachment tempAttachment = new Attachment(id, filename, uploadDate, comments);
+                attachments.add(tempAttachment);
+            }
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            close(connection, statement, resultSet);
+        }
+        return attachments;
     }
 
     @Override

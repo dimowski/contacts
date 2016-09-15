@@ -10,3 +10,11 @@
     max-height: 200px;
     max-width: 200px;
 }
+
+.red {
+    color: red;
+}
+
+.spacing {
+    padding-top: 20px;
+}
