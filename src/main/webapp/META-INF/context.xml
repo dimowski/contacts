@@ -4,7 +4,7 @@
               driverClassName="com.mysql.jdbc.Driver"
               auth="Container" type="javax.sql.DataSource"
               maxTotal="20" maxIdle="5" maxWaitMillis="10000"
-              username="root" password="root"
+              username="itechart" password="itechart"
               url="jdbc:mysql://localhost:3306/dmitry_kach_db?useSSL=false"
     />
 </Context>

@@ -110,9 +110,15 @@
                             <div class="form-group">
                                 <label for="gender" class="col-sm-3 control-label">Пол</label>
                                 <div class="col-sm-4">
-                                    <select id="gender" class="form-control">
-                                        <option selected="selected">М</option>
-                                        <option>Ж</option>
+                                    <select id="gender" class="form-control" required>
+                                        <c:if test="${CONTACT.gender == 'М'}">
+                                            <option selected="selected">М</option>
+                                            <option>Ж</option>
+                                        </c:if>
+                                        <c:if test="${CONTACT.gender == 'Ж'}">
+                                            <option>М</option>
+                                            <option selected="selected">Ж</option>
+                                        </c:if>
                                     </select>
                                 </div>
                             </div>
@@ -127,11 +133,27 @@
                             <div class="form-group">
                                 <label for="status" class="col-sm-3 control-label">Семейное положение</label>
                                 <div class="col-sm-4">
-                                    <select id="status" class="form-control">
-                                        <option selected="selected">женат</option>
-                                        <option>холост</option>
-                                        <option>замужем</option>
-                                        <option>не замужем</option>
+                                    <select id="status" class="form-control" required>
+                                        <c:if test="${CONTACT.gender == 'М'}">
+                                            <c:if test="${CONTACT.status == 'женат'}">
+                                                <option selected="selected">женат</option>
+                                                <option>холост</option>
+                                            </c:if>
+                                            <c:if test="${CONTACT.status == 'холост'}">
+                                                <option>женат</option>
+                                                <option selected="selected">холост</option>
+                                            </c:if>
+                                        </c:if>
+                                        <c:if test="${CONTACT.gender == 'Ж'}">
+                                            <c:if test="${CONTACT.status == 'замужем'}">
+                                                <option selected="selected">замужем</option>
+                                                <option>не замужем</option>
+                                            </c:if>
+                                            <c:if test="${CONTACT.status == 'не замужем'}">
+                                                <option>замужем</option>
+                                                <option selected="selected">не замужем</option>
+                                            </c:if>
+                                        </c:if>
                                     </select>
                                 </div>
                             </div>
@@ -184,10 +206,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="house" class="col-sm-3 control-label">Дом/Квартира</label>
+                                <label for="house" class="col-sm-3 control-label">Дом</label>
                                 <div class="col-sm-4">
                                     <input type="text" value="${CONTACT.address.house}" class="form-control"
                                            id="house" placeholder="Дом">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="flat" class="col-sm-3 control-label">Квартира</label>
+                                <div class="col-sm-4">
                                     <input type="text" value="${CONTACT.address.flat}" class="form-control"
                                            id="flat" placeholder="Квартира">
                                 </div>
@@ -223,29 +250,31 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <thead>
-                                <tr>
-                                    <th class="text-center"><input type="checkbox" name="checkAll"></th>
-                                    <th>Телефонный номер</th>
-                                    <th>Тип</th>
-                                    <th>Комментарий</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="tempPhone" items="${CONTACT.phones}">
+                            <c:if test="${CONTACT.phones.size() != 0}">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
                                     <tr>
-                                        <td class="text-center"><input type="checkbox" name="phone"></td>
-                                        <td>
-                                            <a href="#">${tempPhone.countryCode} ${tempPhone.operatorCode}
-                                                    ${tempPhone.phoneNumber}</a>
-                                        </td>
-                                        <td class="text-center">${tempPhone.phoneType}</td>
-                                        <td>${tempPhone.comments}</td>
+                                        <th class="text-center"><input type="checkbox" name="checkAll"></th>
+                                        <th>Телефонный номер</th>
+                                        <th>Тип</th>
+                                        <th>Комментарий</th>
                                     </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="tempPhone" items="${CONTACT.phones}">
+                                        <tr>
+                                            <td class="text-center"><input type="checkbox" name="phone"></td>
+                                            <td>
+                                                <a href="#">${tempPhone.countryCode} ${tempPhone.operatorCode}
+                                                        ${tempPhone.phoneNumber}</a>
+                                            </td>
+                                            <td class="text-center">${tempPhone.phoneType}</td>
+                                            <td>${tempPhone.comments}</td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </c:if>
                         </div>
 
                     </div>

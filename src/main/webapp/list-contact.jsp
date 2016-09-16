@@ -5,9 +5,12 @@
 <head>
     <title>Contacts</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/checkall.js"></script>
     <script src="js/deleteContact.js"></script>
+    <script src="js/choosePopup.js"></script>
+    <script src="js/popup.js"></script>
 </head>
 <body>
 <div class="container">
@@ -47,9 +50,9 @@
                     <a type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
                     </a>
-                    <button onclick="delCheckedContacts()" class="btn btn-sm btn-primary btn-create">
+                    <a onclick="choosePopUp()" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -142,6 +145,25 @@
 
         </div>
     </div>
+</div>
+<!-- Popup windows -->
+<div class="popup" id="popup1">
+    <h4 class="text-center">Удалить выбранные контакты?</h4>
+    <div class="row">
+        <div class="col-sm-6">
+            <button onclick="hide('popup1');delCheckedContacts()" class="btn btn-default text-left">Да</button>
+        </div>
+        <div class="col-sm-6">
+            <button onclick="hide('popup1')" class="btn btn-default text-right">Нет</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="popup2">
+    <h4 class="text-center">Выберите контакты для удаления!</h4><br/>
+    <button onclick="hide('popup2')" class="btn btn-default center-block">Ок</button>
+</div>
+
 </div>
 </body>
 </html>

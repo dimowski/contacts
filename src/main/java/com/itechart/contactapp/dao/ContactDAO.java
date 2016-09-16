@@ -12,5 +12,5 @@ public interface ContactDAO {
     int getContactsCount();
     List<Phone> getPhonesByContactId(int contactId);
     List<Attachment> getAttachmentsByContactId(int contactId);
-    //Address getContactById(int id);
+    void deleteContacts(String contacts);
 }

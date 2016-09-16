@@ -10,6 +10,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Map;
 
 public class DefaultContactService implements ContactService {
@@ -59,7 +60,14 @@ public class DefaultContactService implements ContactService {
 
     @Override
     public void deleteContact(HttpServletRequest request, HttpServletResponse response) {
-
+        String contactsForDel = request.getParameter("items");
+        log.info("Contacts for removing: {}", contactsForDel);
+        contactDAO.deleteContacts(contactsForDel);
+        try {
+            response.sendRedirect("main?targetPage=" + request.getSession().getAttribute("CURRENT_PAGE"));
+        } catch (IOException e) {
+            log.error("Unable to redirect to main page", e);
+        }
     }
 
     @Override
@@ -74,7 +82,7 @@ public class DefaultContactService implements ContactService {
         theContact.setPhones(contactDAO.getPhonesByContactId(contactId));
         theContact.setAttachments(contactDAO.getAttachmentsByContactId(contactId));
 
-        request.setAttribute("CONTACT", theContact);
+        request.getSession().setAttribute("CONTACT", theContact);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/edit-contact.jsp");
         try {
             dispatcher.forward(request, response);
@@ -85,6 +93,7 @@ public class DefaultContactService implements ContactService {
 
     @Override
     public void saveContact(HttpServletRequest request, HttpServletResponse response) {
+
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.itechart.contactapp.controller;
 
-import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.service.ContactService;
 import com.itechart.contactapp.service.ContactServiceFactory;
 import org.apache.logging.log4j.LogManager;
@@ -44,11 +43,11 @@ public class ContactControllerServlet extends HttpServlet {
             case "edit":
                 contactService.fillContact(request, response);
                 break;
-            case "saveContact":
-                contactService.saveContact(request, response);
-                break;
             case "deleteContact":
                 contactService.deleteContact(request, response);
+                break;
+            case "saveContact":
+                contactService.saveContact(request, response);
                 break;
             default:
                 break;

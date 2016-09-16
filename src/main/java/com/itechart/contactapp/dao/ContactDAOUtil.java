@@ -141,6 +141,23 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     @Override
+    public void deleteContacts(String contacts) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            connection = dataSource.getConnection();
+            String sql = "DELETE FROM contacts WHERE contact_id IN ("+ contacts + ")";
+            statement = connection.createStatement();
+            statement.execute(sql);
+        } catch (SQLException e) {
+            log.error("Unable to remove contacts",e);
+        } finally {
+            close(connection, statement, null);
+        }
+    }
+
+    @Override
     public int getContactsCount() {
 
         Connection connection = null;
@@ -164,14 +181,6 @@ public class ContactDAOUtil implements ContactDAO {
         }
         return result;
     }
-
-    /*@Override
-    public Address getContactById(int id) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        return null;
-    }*/
 
     private void close(Connection connection, Statement statement, ResultSet resultSet) {
         try {
