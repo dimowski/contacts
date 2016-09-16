@@ -147,21 +147,21 @@
     </div>
 </div>
 <!-- Popup windows -->
-<div class="popup" id="popup1">
+<div class="popupSmall" id="popupConfirm">
     <h4 class="text-center">Удалить выбранные контакты?</h4>
     <div class="row">
         <div class="col-sm-6">
-            <button onclick="hide('popup1');delCheckedContacts()" class="btn btn-default text-left">Да</button>
+            <button onclick="hide('popupConfirm');delCheckedContacts()" class="btn btn-default text-left">Да</button>
         </div>
         <div class="col-sm-6">
-            <button onclick="hide('popup1')" class="btn btn-default text-right">Нет</button>
+            <button onclick="hide('popupConfirm')" class="btn btn-default text-right">Нет</button>
         </div>
     </div>
 </div>
 
-<div class="popup" id="popup2">
+<div class="popupSmall" id="popupEmptySet">
     <h4 class="text-center">Выберите контакты для удаления!</h4><br/>
-    <button onclick="hide('popup2')" class="btn btn-default center-block">Ок</button>
+    <button onclick="hide('popupEmptySet')" class="btn btn-default center-block">Ок</button>
 </div>
 
 </div>

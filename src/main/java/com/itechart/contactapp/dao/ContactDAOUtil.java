@@ -58,7 +58,7 @@ public class ContactDAOUtil implements ContactDAO {
                 String flat = resultSet.getString("flat");
                 String zipCode = resultSet.getString("zip_code");
 
-                Address address = new Address(0, country, city, street, house, flat, zipCode);
+                Address address = new Address(country, city, street, house, flat, zipCode);
 
                 Contact tempContact = new Contact(contactId, firstName, lastName, middleName, birthday, status, gender,
                         citizenship, webSite, email, jobCurrent, address, photo);

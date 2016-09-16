@@ -16,7 +16,7 @@
 }
 
 /* Popup windows styles */
-.popup {
+.popupSmall {
     display: none;
     position: fixed;
     padding: 10px;
@@ -30,7 +30,21 @@
     z-index: 20;
 }
 
-.popup:after {
+.popupBig {
+    display: none;
+    position: fixed;
+    padding: 10px;
+    width: 300px;
+    height: 450px;
+    left: 50%;
+    margin-left: -150px;
+    top: 50%;
+    margin-top: -300px;
+    background: #f9f9f9;
+    z-index: 20;
+}
+
+.popupSmall:after,.popupBig:after {
     position: fixed;
     content: "";
     top: 0;
@@ -41,7 +55,7 @@
     z-index: -2;
 }
 
-.popup:before {
+.popupSmall:before,.popupBig:before {
     position: absolute;
     content: "";
     top: 0;

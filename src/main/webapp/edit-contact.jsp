@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/tabswitch.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="js/addPhone.js"></script>
 </head>
 <body>
 <div class="container">
@@ -32,7 +34,7 @@
     </nav>
 
     <!----- Main content ------>
-    <div class="page-header"><h3>${CONTACT.firstName} ${CONTACT.lastName} ${CONTACT.middleName}</h3></div>
+    <div class="page-header"><h3>${CONTACT.firstName} ${CONTACT.middleName} ${CONTACT.lastName}</h3></div>
     <div class="row">
         <div class="col-sm-3">
             <div class="image-upload" style="display: inline-block">
@@ -239,7 +241,8 @@
                                     <p class="panel-title">Всего телефонов: ${CONTACT.phones.size()}</p>
                                 </div>
                                 <div class="col col-xs-8 text-right">
-                                    <button type="button" class="btn btn-sm btn-primary">
+                                    <button onclick="show('phoneEditPopup')" type="button"
+                                            class="btn btn-sm btn-primary">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
                                         телефон
                                     </button>
@@ -250,33 +253,30 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <c:if test="${CONTACT.phones.size() != 0}">
-                                <table class="table table-hover table-bordered">
-                                    <thead>
+                            <table id="phoneTable" class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center"><input type="checkbox" name="checkAll"></th>
+                                    <th>Телефонный номер</th>
+                                    <th>Тип</th>
+                                    <th>Комментарий</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach var="tempPhone" items="${CONTACT.phones}">
                                     <tr>
-                                        <th class="text-center"><input type="checkbox" name="checkAll"></th>
-                                        <th>Телефонный номер</th>
-                                        <th>Тип</th>
-                                        <th>Комментарий</th>
+                                        <td class="text-center"><input type="checkbox" name="phone"></td>
+                                        <td>
+                                            <a href="#">${tempPhone.countryCode} ${tempPhone.operatorCode}
+                                                    ${tempPhone.phoneNumber}</a>
+                                        </td>
+                                        <td class="text-center">${tempPhone.phoneType}</td>
+                                        <td>${tempPhone.comments}</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach var="tempPhone" items="${CONTACT.phones}">
-                                        <tr>
-                                            <td class="text-center"><input type="checkbox" name="phone"></td>
-                                            <td>
-                                                <a href="#">${tempPhone.countryCode} ${tempPhone.operatorCode}
-                                                        ${tempPhone.phoneNumber}</a>
-                                            </td>
-                                            <td class="text-center">${tempPhone.phoneType}</td>
-                                            <td>${tempPhone.comments}</td>
-                                        </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
-                            </c:if>
+                                </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
-
                     </div>
                 </div> <!-- end of div id="content_3" -->
 
@@ -337,6 +337,41 @@
             </form>
         </div>
     </div>
+</div>
+
+
+<!-- Popup for phone editing -->
+<div class="panel panel-default popupBig" id="phoneEditPopup">
+    <div class="form-group">
+        <label for="countryCode">Код страны</label>
+        <input id="countryCode" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Код страны">
+    </div>
+    <div class="form-group">
+        <label for="operatorCode">Код оператора</label>
+        <input id="operatorCode" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Код оператора">
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Номер телефона</label>
+        <input id="phoneNumber" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Номер телефона">
+    </div>
+    <div class="form-group">
+        <label for="phoneType">Тип телефона</label>
+        <select id="phoneType" class="form-control">
+            <option>мобильный</option>
+            <option>домашний</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="phoneComments">Номер телефона</label>
+        <input id="phoneComments" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Комментарий"><br/>
+    </div>
+    <button onclick="addPhone();hide('phoneEditPopup')" class="btn btn-primary">Добавить</button>
+    <button onclick="hide('phoneEditPopup')" class="btn btn-primary pull-right">Отмена</button>
+</div>
 </div>
 </body>
 </html>

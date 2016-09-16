@@ -2,8 +2,6 @@ package com.itechart.contactapp.model;
 
 public class Address {
 
-    private long id;
-
     private String country;
     private String city;
     private String street;
@@ -11,16 +9,6 @@ public class Address {
     private String flat;
 
     private String zipCode;
-
-    public Address(long id, String country, String city, String street, String house, String flat, String zipCode) {
-        this.id = id;
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.house = house;
-        this.flat = flat;
-        this.zipCode = zipCode;
-    }
 
     public Address(String country, String city, String street, String house, String flat,String zipCode) {
         this.country = country;
@@ -42,14 +30,6 @@ public class Address {
             separator = ", ";
         }
         return result;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getCountry() {
