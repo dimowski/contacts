@@ -44,7 +44,7 @@
                     <p class="panel-title">Всего контактов: ${CONTACTS_COUNT}</p>
                 </div>
                 <div class="col col-xs-8 text-right">
-                    <a href="edit-contact.jsp" type="button" class="btn btn-sm btn-primary btn-create">
+                    <a href="main?command=createContact" type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить контакт
                     </a>
                     <a type="button" class="btn btn-sm btn-primary btn-create">
@@ -73,7 +73,7 @@
                         <td class="text-center"><input type="checkbox" name="${tempContact.id}"/></td>
                         <td>
                             <c:url var="editLink" value="main">
-                                <c:param name="command" value="edit"/>
+                                <c:param name="command" value="editContact"/>
                                 <c:param name="contactId" value="${tempContact.id}"/>
                             </c:url>
                             <a href="${editLink}">${tempContact.firstName} ${tempContact.middleName} ${tempContact.lastName}</a>
@@ -142,7 +142,6 @@
                     </nav>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

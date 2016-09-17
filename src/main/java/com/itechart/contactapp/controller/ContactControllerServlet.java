@@ -32,7 +32,7 @@ public class ContactControllerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String theCommand = request.getParameter("command");
-        log.info("command ={}", theCommand);
+        log.info("Method GET, command = {}", theCommand);
         if (theCommand == null) {
             theCommand = "list";
         }
@@ -40,16 +40,30 @@ public class ContactControllerServlet extends HttpServlet {
             case "list":
                 contactService.listContacts(request, response);
                 break;
-            case "edit":
+            case "editContact":
                 contactService.fillContact(request, response);
                 break;
             case "deleteContact":
                 contactService.deleteContact(request, response);
                 break;
+            case "createContact":
+                contactService.createContact(request, response);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String theCommand = request.getParameter("command");
+        log.info("Method POST, command = {}", theCommand);
+        switch (theCommand) {
             case "saveContact":
                 contactService.saveContact(request, response);
                 break;
-            default:
+            case "addAttachment":
+                contactService.addAttachment(request, response);
                 break;
         }
     }

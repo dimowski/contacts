@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 public class DefaultContactService implements ContactService {
@@ -40,9 +45,7 @@ public class DefaultContactService implements ContactService {
                     break;
             }
         }
-
         Map<Integer, Contact> contacts = contactDAO.getContacts(targetPage);
-
         int contactsCount = getContactsCount();
         int pagesCount = (int) Math.ceil(contactsCount / 10.0);
 
@@ -61,7 +64,7 @@ public class DefaultContactService implements ContactService {
     @Override
     public void deleteContact(HttpServletRequest request, HttpServletResponse response) {
         String contactsForDel = request.getParameter("items");
-        log.info("Contacts for removing: {}", contactsForDel);
+        log.debug("Contacts for removing: {}", contactsForDel);
         contactDAO.deleteContacts(contactsForDel);
         try {
             response.sendRedirect("main?targetPage=" + request.getSession().getAttribute("CURRENT_PAGE"));
@@ -93,7 +96,55 @@ public class DefaultContactService implements ContactService {
 
     @Override
     public void saveContact(HttpServletRequest request, HttpServletResponse response) {
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String middleName = request.getParameter("middleName");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date birthday = null;
+        try {
+            birthday = format.parse(request.getParameter("birthday"));
+        } catch (ParseException e) {
+            log.warn("Empty birthday field will set to NULL");
+        }
+        String gender = request.getParameter("gender");
+        String citizenship = request.getParameter("citizenship");
+        String status = request.getParameter("status");
+        String email = request.getParameter("email");
+        String jobCurrent = request.getParameter("jobCurrent");
 
+        String country = request.getParameter("county");
+        String city = request.getParameter("city");
+        String street = request.getParameter("street");
+        String house = request.getParameter("house");
+        String flat = request.getParameter("flat");
+        String zipCode = request.getParameter("zipCode");
+
+        //String phoneType
+
+        //Checks if contact needs to be updated or created new
+        if (request.getSession().getAttribute("CONTACT") != null) {
+
+        }
+    }
+
+    @Override
+    public void addAttachment(HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
+    @Override
+    public void createContact(HttpServletRequest request, HttpServletResponse response) {
+        //Removes attribute to display empty edit-contact.jsp page
+        if (request.getSession().getAttribute("CONTACT") != null) {
+            request.getSession().removeAttribute("CONTACT");
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/edit-contact.jsp");
+        try {
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
     @Override
