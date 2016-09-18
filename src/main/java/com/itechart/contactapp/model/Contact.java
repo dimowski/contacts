@@ -28,27 +28,9 @@ public class Contact {
     private List<Phone> phones;
     private List<Attachment> attachments;
 
-    public Contact(int id, String firstName, String lastName, String middleName, Date birthday, String status,
-                   String gender, String citizenship, String webSite, String email, String jobCurrent,
-                   Address address, String photo) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.middleName = middleName;
-        this.birthday = birthday;
-        this.status = status;
-        this.gender = gender;
-        this.citizenship = citizenship;
-        this.webSite = webSite;
-        this.email = email;
-        this.jobCurrent = jobCurrent;
-        this.address = address;
-        this.photo = photo;
-    }
-
     public Contact(String firstName, String lastName, String middleName, Date birthday, String status, String gender,
                    String citizenship, String webSite, String email, String jobCurrent, Address address, String photo,
-                   List<Phone> phones, List<Attachment> attachments) {
+                   List<Phone> phones) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -62,7 +44,24 @@ public class Contact {
         this.address = address;
         this.photo = photo;
         this.phones = phones;
-        this.attachments = attachments;
+    }
+
+    public Contact(int id, String firstName, String lastName, String middleName, Date birthday, String status,
+                   String gender, String citizenship, String webSite, String email, String jobCurrent, Address address,
+                   String photo) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.birthday = birthday;
+        this.status = status;
+        this.gender = gender;
+        this.citizenship = citizenship;
+        this.webSite = webSite;
+        this.email = email;
+        this.jobCurrent = jobCurrent;
+        this.address = address;
+        this.photo = photo;
     }
 
     @Override

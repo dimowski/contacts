@@ -31,6 +31,7 @@ public class ContactControllerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("utf-8");
         String theCommand = request.getParameter("command");
         log.info("Method GET, command = {}", theCommand);
         if (theCommand == null) {
@@ -56,6 +57,7 @@ public class ContactControllerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("utf-8");
         String theCommand = request.getParameter("command");
         log.info("Method POST, command = {}", theCommand);
         switch (theCommand) {

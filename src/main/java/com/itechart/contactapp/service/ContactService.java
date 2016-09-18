@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface ContactService {
-
     int getContactsCount();
 
     void createContact(HttpServletRequest request, HttpServletResponse response);

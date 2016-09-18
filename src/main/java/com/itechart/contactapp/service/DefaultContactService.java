@@ -2,7 +2,9 @@ package com.itechart.contactapp.service;
 
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
+import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Contact;
+import com.itechart.contactapp.model.Phone;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,12 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class DefaultContactService implements ContactService {
 
@@ -104,27 +105,53 @@ public class DefaultContactService implements ContactService {
         try {
             birthday = format.parse(request.getParameter("birthday"));
         } catch (ParseException e) {
-            log.warn("Empty birthday field will set to NULL");
+            log.warn("Empty field birthday will set to NULL");
         }
         String gender = request.getParameter("gender");
         String citizenship = request.getParameter("citizenship");
+        String webSite = request.getParameter("webSite");
         String status = request.getParameter("status");
         String email = request.getParameter("email");
         String jobCurrent = request.getParameter("jobCurrent");
 
-        String country = request.getParameter("county");
+        String country = request.getParameter("country");
         String city = request.getParameter("city");
         String street = request.getParameter("street");
         String house = request.getParameter("house");
         String flat = request.getParameter("flat");
         String zipCode = request.getParameter("zipCode");
+        Address theAddress = new Address(country, city, street, house, flat, zipCode);
 
-        //String phoneType
+        // EDIT FROM HERE!
+        List<Phone> phoneList = null;
+        String[] phoneType = request.getParameterValues("phoneType");
+        if (phoneType != null) {
+            phoneList = new ArrayList<>(phoneType.length);
+            String[] phoneId = request.getParameterValues("phoneId");
+            String[] countryCode = request.getParameterValues("countryCode");
+            String[] operatorCode = request.getParameterValues("operatorCode");
+            String[] phoneNumber = request.getParameterValues("phoneNumber");
+            String[] comments = request.getParameterValues("phoneComments");
+            for (int i = 0; i < phoneType.length; i++) {
+                //------VALIDATION NEEDED HERE!!!!------
+                Phone tempPhone = new Phone(countryCode[i], operatorCode[i], phoneNumber[i], phoneType[i], comments[i]);
+                phoneList.add(tempPhone);
+                log.debug(tempPhone);
+            }
+        }
+
+        Contact theContact = new Contact(firstName, lastName, middleName, birthday, status, gender, citizenship,
+                webSite, email, jobCurrent, theAddress, null, phoneList);
 
         //Checks if contact needs to be updated or created new
-        if (request.getSession().getAttribute("CONTACT") != null) {
-
+        Contact oldContact = (Contact) request.getSession().getAttribute("CONTACT");
+        if (oldContact != null) {
+            theContact.setId(oldContact.getId());
+            contactDAO.updateContact(theContact);
+        } else {
+            contactDAO.createContact(theContact);
         }
+        listContacts(request, response);
     }
 
     @Override

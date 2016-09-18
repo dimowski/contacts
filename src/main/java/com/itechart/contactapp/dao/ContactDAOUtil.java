@@ -141,17 +141,61 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     @Override
+    public void createContact(Contact contact) {
+
+    }
+
+    @Override
+    public void updateContact(Contact contact) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = dataSource.getConnection();
+            String sql1 = "UPDATE contacts SET first_name=?, last_name=?, middle_name=?, birthday=?, status=?, gender=?," +
+                    "citizenship=?, web_site=?, email=?, job_current=?, photo=?, country=?, city=?, street=?, house=?," +
+                    "flat=?, zip_code=? WHERE contact_id=?";
+            //String sql2 = ""
+            preparedStatement = connection.prepareStatement(sql1);
+            preparedStatement.setString(1, contact.getFirstName());
+            preparedStatement.setString(2, contact.getLastName());
+            preparedStatement.setString(3, contact.getMiddleName());
+            preparedStatement.setDate(4, new java.sql.Date(contact.getBirthday().getTime()));
+            preparedStatement.setString(5, contact.getStatus());
+            preparedStatement.setString(6, contact.getGender());
+            preparedStatement.setString(7, contact.getCitizenship());
+            preparedStatement.setString(8, contact.getWebSite());
+            preparedStatement.setString(9, contact.getEmail());
+            preparedStatement.setString(10, contact.getJobCurrent());
+            preparedStatement.setString(11, contact.getPhoto());
+            preparedStatement.setString(12, contact.getAddress().getCountry());
+            preparedStatement.setString(13, contact.getAddress().getCity());
+            preparedStatement.setString(14, contact.getAddress().getStreet());
+            preparedStatement.setString(15, contact.getAddress().getHouse());
+            preparedStatement.setString(16, contact.getAddress().getFlat());
+            preparedStatement.setString(17, contact.getAddress().getZipCode());
+            preparedStatement.setInt(18, contact.getId());
+            log.debug(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            log.error("Unable to update contact", e);
+        } finally {
+            close(connection, preparedStatement, null);
+        }
+    }
+
+    @Override
     public void deleteContacts(String contacts) {
         Connection connection = null;
         Statement statement = null;
 
         try {
             connection = dataSource.getConnection();
-            String sql = "DELETE FROM contacts WHERE contact_id IN ("+ contacts + ")";
+            String sql = "DELETE FROM contacts WHERE contact_id IN (" + contacts + ")";
             statement = connection.createStatement();
             statement.execute(sql);
         } catch (SQLException e) {
-            log.error("Unable to remove contacts",e);
+            log.error("Unable to remove contacts", e);
         } finally {
             close(connection, statement, null);
         }

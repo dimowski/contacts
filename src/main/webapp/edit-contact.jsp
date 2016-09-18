@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 
 <html>
 <head>
@@ -178,6 +178,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="webSite" class="col-sm-3 control-label">Web Site</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" value="${CONTACT.webSite}" class="form-control" id="webSite"
+                                               placeholder="Web Site" name="webSite" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="email" class="col-sm-3 control-label">Email</label>
                                     <div class="col-sm-4">
                                         <input type="email" value="${CONTACT.email}" class="form-control" id="email"
@@ -283,14 +290,20 @@
                                 </thead>
                                 <tbody>
                                 <c:forEach var="tempPhone" items="${CONTACT.phones}">
-                                    <tr>
-                                        <td class="text-center"><input type="checkbox" name="phone"></td>
-                                        <td>
-                                            <a href="#">${tempPhone.countryCode} ${tempPhone.operatorCode}
-                                                    ${tempPhone.phoneNumber}</a>
+                                    <tr id="${tempPhone.countryCode}${tempPhone.operatorCode}${tempPhone.phoneNumber}">
+                                        <td class="text-center"><input type="checkbox" name="phoneCheck"></td>
+                                        <td><input type="hidden" name="phoneId" value="${tempPhone.id}">
+                                            <input type="hidden" name="countryCode" value="${tempPhone.countryCode}">
+                                            <input type="hidden" name="operatorCode" value="${tempPhone.operatorCode}">
+                                            <input type="hidden" name="phoneNumber" value="${tempPhone.phoneNumber}">
+                                            <a role="button"
+                                               onclick="editPhone(document);show('phoneEditPopup')">+${tempPhone.countryCode} ${tempPhone.operatorCode} ${tempPhone.phoneNumber}</a>
                                         </td>
-                                        <td class="text-center">${tempPhone.phoneType}</td>
-                                        <td>${tempPhone.comments}</td>
+                                        <td class="text-center">
+                                            <input type="hidden" name="phoneType" value="${tempPhone.phoneType}">
+                                                ${tempPhone.phoneType}</td>
+                                        <td><input type="hidden" name="phoneComments" value="${tempPhone.comments}">
+                                                ${tempPhone.comments}</td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
@@ -353,7 +366,7 @@
                     </div>
                 </div> <!-- end of div id="content_4" -->
 
-                <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
+                <input type="submit" class="btn btn-primary pull-right" value="Сохранить">
             </div>
             <input type="hidden" name="command" value="saveContact">
         </form>
@@ -371,7 +384,7 @@
     <div class="form-group">
         <label for="operatorCode">Код оператора</label>
         <input id="operatorCode" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Код оператора" required>
+               placeholder="Код оператора">
     </div>
     <div class="form-group">
         <label for="phoneNumber">Номер телефона</label>
@@ -407,7 +420,7 @@
                    placeholder="Комментарий">
         </div>
         <input type="hidden" name="command" value="addAttachment">
-        <input value="Добавить" type="submit" onclick="hide('attachmentEditPopup')" class="btn btn-primary"/>
+        <input value="Добавить" type="submit" class="btn btn-primary"/>
         <button onclick="hide('attachmentEditPopup')" class="btn btn-primary pull-right">Отмена</button>
     </form>
 </div>

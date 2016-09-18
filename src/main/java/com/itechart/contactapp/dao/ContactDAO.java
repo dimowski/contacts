@@ -9,8 +9,16 @@ import java.util.Map;
 
 public interface ContactDAO {
     Map<Integer, Contact> getContacts(int page);
+
     int getContactsCount();
+
     List<Phone> getPhonesByContactId(int contactId);
+
     List<Attachment> getAttachmentsByContactId(int contactId);
+
     void deleteContacts(String contacts);
+
+    void updateContact(Contact contact);
+
+    void createContact(Contact contact);
 }
