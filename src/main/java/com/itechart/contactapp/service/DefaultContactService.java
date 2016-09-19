@@ -2,7 +2,10 @@ package com.itechart.contactapp.service;
 
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
+import com.itechart.contactapp.helper.FileUploader;
+import com.itechart.contactapp.helper.UploadFileToServer;
 import com.itechart.contactapp.model.Address;
+import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.model.Phone;
 import org.apache.logging.log4j.LogManager;
@@ -13,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,9 +25,11 @@ public class DefaultContactService implements ContactService {
     private static final Logger log = LogManager.getLogger(DefaultContactService.class);
 
     private ContactDAO contactDAO;
+    private Properties properties;
 
-    public DefaultContactService(DataSource theDataSource) {
+    public DefaultContactService(DataSource theDataSource, Properties theProperties) {
         contactDAO = ContactDAOFactory.getContactDAO(theDataSource);
+        properties = theProperties;
     }
 
     @Override
@@ -82,7 +85,6 @@ public class DefaultContactService implements ContactService {
         Map<Integer, Contact> tempList = (Map<Integer, Contact>) request.getSession().getAttribute("CONTACT_LIST");
 
         Contact theContact = tempList.get(contactId);
-        log.debug(theContact);
         theContact.setPhones(contactDAO.getPhonesByContactId(contactId));
         theContact.setAttachments(contactDAO.getAttachmentsByContactId(contactId));
 
@@ -113,6 +115,8 @@ public class DefaultContactService implements ContactService {
         String status = request.getParameter("status");
         String email = request.getParameter("email");
         String jobCurrent = request.getParameter("jobCurrent");
+        FileUploader fileUploader = new UploadFileToServer(properties);
+        String photo = fileUploader.uploadProfilePhoto(request, response);
 
         String country = request.getParameter("country");
         String city = request.getParameter("city");
@@ -141,12 +145,16 @@ public class DefaultContactService implements ContactService {
         }
 
         Contact theContact = new Contact(firstName, lastName, middleName, birthday, status, gender, citizenship,
-                webSite, email, jobCurrent, theAddress, null, phoneList);
+                webSite, email, jobCurrent, theAddress, photo, phoneList);
 
         //Checks if contact needs to be updated or created new
         Contact oldContact = (Contact) request.getSession().getAttribute("CONTACT");
         if (oldContact != null) {
             theContact.setId(oldContact.getId());
+            if (photo == null) {
+                photo = oldContact.getPhoto();
+                theContact.setPhoto(photo);
+            }
             contactDAO.updateContact(theContact);
         } else {
             contactDAO.createContact(theContact);
@@ -156,7 +164,15 @@ public class DefaultContactService implements ContactService {
 
     @Override
     public void addAttachment(HttpServletRequest request, HttpServletResponse response) {
+        FileUploader fileUploader = new UploadFileToServer(properties);
+        Attachment attachment = fileUploader.uploadAttachment(request, response);
 
+        contactDAO.createAttachment(attachment);
+        try {
+            response.sendRedirect("edit-contact.jsp");
+        } catch (IOException e) {
+            log.error("Unable to redirect to main page", e);
+        }
     }
 
     @Override

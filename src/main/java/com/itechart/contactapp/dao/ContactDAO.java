@@ -21,4 +21,6 @@ public interface ContactDAO {
     void updateContact(Contact contact);
 
     void createContact(Contact contact);
+
+    void createAttachment(Attachment attachment);
 }

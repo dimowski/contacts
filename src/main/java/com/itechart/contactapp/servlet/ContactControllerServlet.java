@@ -1,4 +1,4 @@
-package com.itechart.contactapp.controller;
+package com.itechart.contactapp.servlet;
 
 import com.itechart.contactapp.service.ContactService;
 import com.itechart.contactapp.service.ContactServiceFactory;
@@ -7,12 +7,16 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
+@MultipartConfig
 public class ContactControllerServlet extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(ContactControllerServlet.class);
@@ -21,12 +25,21 @@ public class ContactControllerServlet extends HttpServlet {
 
     @Resource(name = "jdbc/dmitry_kach_db")
     private DataSource dataSource;
+    private static Properties properties;
 
     @Override
     public void init() throws ServletException {
-        super.init();
+        properties = new Properties();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream input = classLoader.getResourceAsStream("contactapp.properties");
         log.info("initialized");
-        contactService = ContactServiceFactory.getContactService(dataSource);
+        try {
+            properties.load(input);
+        } catch (IOException e) {
+            log.error("Unable to initialize properties file", e);
+        }
+        getServletConfig().getServletContext().setAttribute("contactapp.properties", properties);
+        contactService = ContactServiceFactory.getContactService(dataSource, properties);
     }
 
     @Override

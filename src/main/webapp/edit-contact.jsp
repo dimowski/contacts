@@ -36,7 +36,8 @@
     <!----- Main content ------>
     <div class="page-header"><h3>${CONTACT.firstName} ${CONTACT.middleName} ${CONTACT.lastName}</h3></div>
     <div class="row">
-        <form ectype="multipart/form-data" action="main" method="POST">
+        <form method="POST" enctype="multipart/form-data" action="main">
+            <input type="hidden" name="command" value="saveContact">
             <div class="col-sm-3">
                 <div class="image-upload" style="display: inline-block">
                     <label for="file-input">
@@ -44,10 +45,11 @@
                             <img src="images/defaultUserIcon.png" alt="Profile photo"/>
                         </c:if>
                         <c:if test="${not empty CONTACT.photo}">
-                            <img class="contact-photo" src="<c:out value="${CONTACT.photo}"/>" alt="Profile photo"/>
+                            <img class="contact-photo" src="/contactapp/getFile/<c:out value="${CONTACT.photo}"/>"
+                                 alt="Profile photo"/>
                         </c:if>
                     </label>
-                    <input type="file" accept="image/*" id="file-input"/>
+                    <input type="file" accept="image/*" id="file-input" name="profilePhoto"/>
                 </div>
             </div>
 
@@ -154,22 +156,22 @@
                                                 <option>замужем</option>
                                                 <option selected="selected">не замужем</option>
                                             </c:if>
-                                            <c:if test="${CONTACT.gender == 'М'}">
-                                                <c:if test="${CONTACT.status == 'женат'}">
+                                            <c:if test="${CONTACT.gender eq 'М'}">
+                                                <c:if test="${CONTACT.status eq 'женат'}">
                                                     <option selected="selected">женат</option>
                                                     <option>холост</option>
                                                 </c:if>
-                                                <c:if test="${CONTACT.status == 'холост'}">
+                                                <c:if test="${(CONTACT.status eq 'холост') || (empty CONTACT.status)}">
                                                     <option>женат</option>
                                                     <option selected="selected">холост</option>
                                                 </c:if>
                                             </c:if>
-                                            <c:if test="${CONTACT.gender == 'Ж'}">
-                                                <c:if test="${CONTACT.status == 'замужем'}">
+                                            <c:if test="${CONTACT.gender eq 'Ж'}">
+                                                <c:if test="${CONTACT.status eq 'замужем'}">
                                                     <option selected="selected">замужем</option>
                                                     <option>не замужем</option>
                                                 </c:if>
-                                                <c:if test="${CONTACT.status == 'не замужем'}">
+                                                <c:if test="${(CONTACT.status eq 'не замужем') || (empty CONTACT.status)}">
                                                     <option>замужем</option>
                                                     <option selected="selected">не замужем</option>
                                                 </c:if>
@@ -351,7 +353,7 @@
                                         <td class="text-center">${tempAttachment.uploadDate}</td>
                                         <td>${tempAttachment.comments}</td>
                                         <td class="text-center">
-                                            <a><span class="glyphicon glyphicon-download-alt"
+                                            <a href="getAttachment?fileName=${tempAttachment.filename}"><span class="glyphicon glyphicon-download-alt"
                                                      aria-hidden="true"></span></a>
                                         </td>
                                         <td class="text-center">
@@ -365,10 +367,9 @@
                         </div>
                     </div>
                 </div> <!-- end of div id="content_4" -->
-
-                <input type="submit" class="btn btn-primary pull-right" value="Сохранить">
+                <a class="btn btn-primary pull-right" type="button" href="main">Отмена</a>
+                <input type="submit" class="btn btn-primary pull-right" value="Сохранить" style="margin-right: 10px">
             </div>
-            <input type="hidden" name="command" value="saveContact">
         </form>
     </div>
 </div>
@@ -412,11 +413,11 @@
     <form action="main" enctype="multipart/form-data" method="POST">
         <div class="form-group">
             <label for="fileName">Файл</label>
-            <input id="fileName" type="file" required>
+            <input id="fileName" type="file" name="attachment">
         </div>
         <div class="form-group">
             <label for="attachmentComments">Комментарий</label>
-            <input id="attachmentComments" type="text" class="form-control" aria-describedby="basic-addon1"
+            <input id="attachmentComments" type="text" class="form-control" name="comments" aria-describedby="basic-addon1"
                    placeholder="Комментарий">
         </div>
         <input type="hidden" name="command" value="addAttachment">

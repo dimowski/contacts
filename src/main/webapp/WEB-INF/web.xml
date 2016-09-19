@@ -1,22 +1,44 @@
 <!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-  <display-name>Archetype Created Web Application</display-name>
+    <display-name>Archetype Created Web Application</display-name>
 
-  <welcome-file-list>
-    <welcome-file>main</welcome-file>
-  </welcome-file-list>
+    <context-param>
+        <param-name>upload.location</param-name>
+        <param-value>/uploadedFiles</param-value>
+    </context-param>
 
-  <servlet>
-    <servlet-name>ContactControllerServlet</servlet-name>
-    <servlet-class>com.itechart.contactapp.controller.ContactControllerServlet</servlet-class>
-  </servlet>
 
-  <servlet-mapping>
-    <servlet-name>ContactControllerServlet</servlet-name>
-    <url-pattern>/main</url-pattern>
-  </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>main</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>ContactControllerServlet</servlet-name>
+        <servlet-class>com.itechart.contactapp.servlet.ContactControllerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReturnPhotoServlet</servlet-name>
+        <servlet-class>com.itechart.contactapp.servlet.ReturnPhotoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReturnFileServlet</servlet-name>
+        <servlet-class>com.itechart.contactapp.servlet.ReturnFileServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ContactControllerServlet</servlet-name>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReturnPhotoServlet</servlet-name>
+        <url-pattern>/getFile/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReturnFileServlet</servlet-name>
+        <url-pattern>/getAttachment</url-pattern>
+    </servlet-mapping>
 </web-app>

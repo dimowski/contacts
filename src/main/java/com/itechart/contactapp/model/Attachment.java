@@ -5,6 +5,7 @@ import java.util.Date;
 public class Attachment {
 
     private int id;
+    private int contactId;
 
     private String filename;
     private Date uploadDate;
@@ -17,10 +18,11 @@ public class Attachment {
         this.comments = comments;
     }
 
-    public Attachment(String filename, Date uploadDate, String comments) {
+    public Attachment(String filename, Date uploadDate, String comments, int contactId) {
         this.filename = filename;
         this.uploadDate = uploadDate;
         this.comments = comments;
+        this.contactId = contactId;
     }
 
     @Override
@@ -63,5 +65,13 @@ public class Attachment {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public int getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
     }
 }

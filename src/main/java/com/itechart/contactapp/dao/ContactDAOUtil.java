@@ -141,8 +141,66 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     @Override
-    public void createContact(Contact contact) {
+    public void createAttachment(Attachment attachment) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
+        try {
+            connection = dataSource.getConnection();
+            String sql = "INSERT INTO attachment (contact_id, filename, upload_date, comments)" +
+                    "VALUES (?, ?, ?, ?)";
+
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, attachment.getContactId());
+            preparedStatement.setString(2, attachment.getFilename());
+            preparedStatement.setTimestamp(3, new Timestamp(attachment.getUploadDate().getTime()));
+            preparedStatement.setString(4, attachment.getComments());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            log.error(e);
+        }
+    }
+
+    @Override
+    public void createContact(Contact contact) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = dataSource.getConnection();
+            String sql1 = "INSERT INTO contacts (first_name, last_name, middle_name, birthday, status, gender," +
+                    "citizenship, web_site, email, job_current, photo, country, city, street, house, flat, zip_code)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            //String sql2 = ""
+            preparedStatement = connection.prepareStatement(sql1);
+            preparedStatement.setString(1, contact.getFirstName());
+            preparedStatement.setString(2, contact.getLastName());
+            preparedStatement.setString(3, contact.getMiddleName());
+            if (contact.getBirthday() != null) {
+                preparedStatement.setDate(4, new java.sql.Date(contact.getBirthday().getTime()));
+            } else
+                preparedStatement.setDate(4, null);
+            preparedStatement.setString(5, contact.getStatus());
+            preparedStatement.setString(6, contact.getGender());
+            preparedStatement.setString(7, contact.getCitizenship());
+            preparedStatement.setString(8, contact.getWebSite());
+            preparedStatement.setString(9, contact.getEmail());
+            preparedStatement.setString(10, contact.getJobCurrent());
+            preparedStatement.setString(11, contact.getPhoto());
+            preparedStatement.setString(12, contact.getAddress().getCountry());
+            preparedStatement.setString(13, contact.getAddress().getCity());
+            preparedStatement.setString(14, contact.getAddress().getStreet());
+            preparedStatement.setString(15, contact.getAddress().getHouse());
+            preparedStatement.setString(16, contact.getAddress().getFlat());
+            preparedStatement.setString(17, contact.getAddress().getZipCode());
+            log.debug(preparedStatement);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            log.error("Unable to create contact", e);
+        } finally {
+            close(connection, preparedStatement, null);
+        }
     }
 
     @Override
