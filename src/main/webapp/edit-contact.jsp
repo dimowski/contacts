@@ -18,24 +18,7 @@
 <body>
 <div class="container">
 
-    <!----- Navigation bar ------>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <div class="navbar-brand">Contacts</div>
-            </div>
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="main"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Список
-                        контактов</a>
-                </li>
-                <li>
-                    <a href="#"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <%@include file="navbar-header.jsp" %>
 
     <!----- Main content ------>
     <div class="page-header"><h3>${CONTACT.firstName} ${CONTACT.middleName} ${CONTACT.lastName}</h3></div>
@@ -46,10 +29,11 @@
                 <div class="image-upload" style="display: inline-block">
                     <label for="file-input">
                         <c:if test="${empty CONTACT.photo}">
-                            <img src="images/defaultUserIcon.png" alt="Profile photo"/>
+                            <img src="images/defaultUserIcon.png" class="img-rounded" alt="Profile photo"/>
                         </c:if>
                         <c:if test="${not empty CONTACT.photo}">
-                            <img class="contact-photo" src="/contactapp/getFile/<c:out value="${CONTACT.photo}"/>"
+                            <img class="contact-photo img-rounded"
+                                 src="/contactapp/getFile/<c:out value="${CONTACT.photo}"/>"
                                  alt="Profile photo"/>
                         </c:if>
                     </label>
@@ -154,32 +138,40 @@
                                     <label for="status" class="col-sm-3 control-label">Семейное положение</label>
                                     <div class="col-sm-4">
                                         <select id="status" class="form-control" name="status">
-                                            <c:if test="${empty CONTACT}">
-                                                <option>женат</option>
-                                                <option selected="selected">холост</option>
-                                                <option>замужем</option>
-                                                <option selected="selected">не замужем</option>
-                                            </c:if>
-                                            <c:if test="${CONTACT.gender eq 'М'}">
-                                                <c:if test="${CONTACT.status eq 'женат'}">
-                                                    <option selected="selected">женат</option>
-                                                    <option>холост</option>
-                                                </c:if>
-                                                <c:if test="${(CONTACT.status eq 'холост') || (empty CONTACT.status)}">
-                                                    <option>женат</option>
-                                                    <option selected="selected">холост</option>
-                                                </c:if>
-                                            </c:if>
-                                            <c:if test="${CONTACT.gender eq 'Ж'}">
-                                                <c:if test="${CONTACT.status eq 'замужем'}">
-                                                    <option selected="selected">замужем</option>
-                                                    <option>не замужем</option>
-                                                </c:if>
-                                                <c:if test="${(CONTACT.status eq 'не замужем') || (empty CONTACT.status)}">
-                                                    <option>замужем</option>
-                                                    <option selected="selected">не замужем</option>
-                                                </c:if>
-                                            </c:if>
+                                            <c:choose>
+                                                <c:when test="${CONTACT.gender eq 'М'}">
+                                                    <c:choose>
+                                                        <c:when test="${CONTACT.status eq 'женат'}">
+                                                            <option selected="selected">женат</option>
+                                                            <option>холост</option>
+                                                        </c:when>
+                                                        <c:when test="${(CONTACT.status eq 'холост')}">
+                                                            <option>женат</option>
+                                                            <option selected="selected">холост</option>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <option>женат</option>
+                                                            <option selected="selected">холост</option>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:when test="${CONTACT.gender eq 'Ж'}">
+                                                    <c:choose>
+                                                        <c:when test="${CONTACT.status eq 'замужем'}">
+                                                            <option selected="selected">замужем</option>
+                                                            <option>не замужем</option>
+                                                        </c:when>
+                                                        <c:when test="${(CONTACT.status eq 'не замужем')}">
+                                                            <option>замужем</option>
+                                                            <option selected="selected">не замужем</option>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <option>замужем</option>
+                                                            <option selected="selected">не замужем</option>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                            </c:choose>
                                         </select>
                                     </div>
                                 </div>
@@ -286,10 +278,11 @@
                         </div>
                         <div class="table-responsive">
                             <table id="phoneTable" class="table table-hover table-bordered">
-                                <input type="hidden" id="idsForDel">
+                                <input type="hidden" id="idsForDel" name="idsForDel">
                                 <thead>
                                 <tr>
-                                    <th class="text-center"><input type="checkbox" id="All" onclick="checkAll(this)"/></th>
+                                    <th class="text-center"><input type="checkbox" id="All" onclick="checkAll(this)"/>
+                                    </th>
                                     <th>Телефонный номер</th>
                                     <th>Тип</th>
                                     <th>Комментарий</th>
@@ -301,16 +294,24 @@
                                         <td class="text-center"><input type="checkbox" name="${tempPhone.id}"></td>
                                         <td><a role="button" id="label${tempPhone.id}"
                                                onclick="editPhone(${tempPhone.id});">${tempPhone.countryCode} ${tempPhone.operatorCode} ${tempPhone.phoneNumber}</a>
-                                            <input id="phoneId${tempPhone.id}" type="hidden" name="phoneId" value="${tempPhone.id}">
-                                            <input id="countryCode${tempPhone.id}" type="hidden" name="countryCode" value="${tempPhone.countryCode}">
-                                            <input id="operatorCode${tempPhone.id}" type="hidden" name="operatorCode" value="${tempPhone.operatorCode}">
-                                            <input id="phoneNumber${tempPhone.id}" type="hidden" name="phoneNumber" value="${tempPhone.phoneNumber}">
+                                            <input id="phoneId${tempPhone.id}" type="hidden" name="phoneId"
+                                                   value="${tempPhone.id}">
+                                            <input id="countryCode${tempPhone.id}" type="hidden" name="countryCode"
+                                                   value="${tempPhone.countryCode}">
+                                            <input id="operatorCode${tempPhone.id}" type="hidden" name="operatorCode"
+                                                   value="${tempPhone.operatorCode}">
+                                            <input id="phoneNumber${tempPhone.id}" type="hidden" name="phoneNumber"
+                                                   value="${tempPhone.phoneNumber}">
                                         </td>
                                         <td class="text-center">
-                                            <input id="phoneType${tempPhone.id}" type="hidden" name="phoneType" value="${tempPhone.phoneType}">
-                                                <div id="phoneTypeLabel${tempPhone.id}">${tempPhone.phoneType}</div></td>
-                                        <td><input id="phoneComments${tempPhone.id}" type="hidden" name="phoneComments" value="${tempPhone.comments}">
-                                                <div id="phoneCommentsLabel${tempPhone.id}">${tempPhone.comments}</div></td>
+                                            <input id="phoneType${tempPhone.id}" type="hidden" name="phoneType"
+                                                   value="${tempPhone.phoneType}">
+                                            <div id="phoneTypeLabel${tempPhone.id}">${tempPhone.phoneType}</div>
+                                        </td>
+                                        <td><input id="phoneComments${tempPhone.id}" type="hidden" name="phoneComments"
+                                                   value="${tempPhone.comments}">
+                                            <div id="phoneCommentsLabel${tempPhone.id}">${tempPhone.comments}</div>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>

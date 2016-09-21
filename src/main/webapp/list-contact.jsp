@@ -29,7 +29,7 @@
                         <span class="sr-only">(current)</span></a>
                 </li>
                 <li>
-                    <a href="#"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск</a>
+                    <a href="search-contact.jsp"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск</a>
                 </li>
             </ul>
         </div>
@@ -47,7 +47,7 @@
                     <a href="main?command=createContact" type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить контакт
                     </a>
-                    <a type="button" class="btn btn-sm btn-primary btn-create">
+                    <a type="button" class="btn btn-sm btn-primary btn-create" href="email-form.jsp">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
                     </a>
                     <a onclick="choosePopUp()" class="btn btn-sm btn-primary btn-create">

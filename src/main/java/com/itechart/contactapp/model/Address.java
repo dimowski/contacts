@@ -29,7 +29,7 @@ public class Address {
                 result += separator + s;
             separator = ", ";
         }
-        return result;
+        return result + "/" + flat;
     }
 
     public String getCountry() {

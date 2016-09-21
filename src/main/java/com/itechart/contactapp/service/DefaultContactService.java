@@ -126,7 +126,6 @@ public class DefaultContactService implements ContactService {
         String zipCode = request.getParameter("zipCode");
         Address theAddress = new Address(country, city, street, house, flat, zipCode);
 
-        // EDIT FROM HERE!
         List<Phone> phoneList = null;
         String[] phoneId = request.getParameterValues("phoneId");
         if (phoneId != null) {
@@ -136,26 +135,31 @@ public class DefaultContactService implements ContactService {
             String[] operatorCode = request.getParameterValues("operatorCode");
             String[] phoneNumber = request.getParameterValues("phoneNumber");
             String[] comments = request.getParameterValues("phoneComments");
-            for (int i = 0; i < phoneType.length; i++) {
-                //------VALIDATION NEEDED HERE!!!!------
-                Phone tempPhone = new Phone(countryCode[i], operatorCode[i], phoneNumber[i], phoneType[i], comments[i]);
+            for (int i = 0; i < phoneId.length; i++) {
+                //------VALIDATION NEED HERE!!!!------
+                Phone tempPhone = new Phone(Integer.parseInt(phoneId[i]), countryCode[i], operatorCode[i], phoneNumber[i], phoneType[i], comments[i]);
                 phoneList.add(tempPhone);
                 log.debug(tempPhone);
             }
         }
 
+        int[] phoneIdForDelete = new int[0];
+        if (!request.getParameter("idsForDel").equals("")) {
+            String[] strPhoneIdForDel = request.getParameter("idsForDel").split("/");
+            phoneIdForDelete = Arrays.stream(strPhoneIdForDel).mapToInt(Integer::parseInt).toArray();
+        }
+
         Contact theContact = new Contact(firstName, lastName, middleName, birthday, status, gender, citizenship,
                 webSite, email, jobCurrent, theAddress, photo, phoneList);
 
-        //Checks if contact needs to be updated or created new
+        //Checks if contact needs to be updated or created new.
         Contact oldContact = (Contact) request.getSession().getAttribute("CONTACT");
         if (oldContact != null) {
             theContact.setId(oldContact.getId());
             if (photo == null) {
-                photo = oldContact.getPhoto();
-                theContact.setPhoto(photo);
+                theContact.setPhoto(oldContact.getPhoto());
             }
-            contactDAO.updateContact(theContact);
+            contactDAO.updateContact(theContact, phoneIdForDelete);
         } else {
             contactDAO.createContact(theContact);
         }

@@ -185,8 +185,7 @@ public class ContactDAOUtil implements ContactDAO {
                     "citizenship, web_site, email, job_current, photo, country, city, street, house, flat, zip_code)" +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            //String sql2 = ""
-            preparedStatement = connection.prepareStatement(sql1);
+            preparedStatement = connection.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, contact.getFirstName());
             preparedStatement.setString(2, contact.getLastName());
             preparedStatement.setString(3, contact.getMiddleName());
@@ -207,8 +206,18 @@ public class ContactDAOUtil implements ContactDAO {
             preparedStatement.setString(15, contact.getAddress().getHouse());
             preparedStatement.setString(16, contact.getAddress().getFlat());
             preparedStatement.setString(17, contact.getAddress().getZipCode());
-            log.debug(preparedStatement);
-            preparedStatement.execute();
+
+            preparedStatement.executeUpdate();
+
+            if (contact.getPhones() != null) {
+                ResultSet contactKey = preparedStatement.getGeneratedKeys();
+                if (contactKey.next()) {
+                    contact.setId(contactKey.getInt(1));
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+                createPhones(connection, contact.getPhones(), contact.getId());
+            }
         } catch (SQLException e) {
             log.error("Unable to create contact", e);
         } finally {
@@ -217,7 +226,7 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     @Override
-    public void updateContact(Contact contact) {
+    public void updateContact(Contact contact, int[] phoneIdForDelete) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -226,7 +235,6 @@ public class ContactDAOUtil implements ContactDAO {
             String sql1 = "UPDATE contacts SET first_name=?, last_name=?, middle_name=?, birthday=?, status=?, gender=?," +
                     "citizenship=?, web_site=?, email=?, job_current=?, photo=?, country=?, city=?, street=?, house=?," +
                     "flat=?, zip_code=? WHERE contact_id=?";
-            //String sql2 = ""
             preparedStatement = connection.prepareStatement(sql1);
             preparedStatement.setString(1, contact.getFirstName());
             preparedStatement.setString(2, contact.getLastName());
@@ -249,8 +257,52 @@ public class ContactDAOUtil implements ContactDAO {
             preparedStatement.setString(16, contact.getAddress().getFlat());
             preparedStatement.setString(17, contact.getAddress().getZipCode());
             preparedStatement.setInt(18, contact.getId());
-            log.debug(preparedStatement);
+
             preparedStatement.executeUpdate();
+
+            List<Phone> phoneList = contact.getPhones();
+            if (phoneList != null) {
+                List<Phone> phonesForUpdate = new ArrayList<>();
+                List<Phone> phonesForCreate = new ArrayList<>();
+                for (Phone tempPhone : phoneList) {
+                    if (tempPhone.getId() != 0) {
+                        phonesForUpdate.add(tempPhone);
+                    } else {
+                        phonesForCreate.add(tempPhone);
+                    }
+                }
+                if (phonesForUpdate.size() > 0) {
+                    String sql = "UPDATE phone SET country_code=?, operator_code=?, phone_number=?, phone_type=?," +
+                            "comments=? WHERE phone_id=?";
+                    preparedStatement = connection.prepareStatement(sql);
+                    connection.setAutoCommit(false);
+                    for (Phone tempPhone : phonesForUpdate) {
+                        preparedStatement.setString(1, tempPhone.getCountryCode());
+                        preparedStatement.setString(2, tempPhone.getOperatorCode());
+                        preparedStatement.setString(3, tempPhone.getPhoneNumber());
+                        preparedStatement.setString(4, tempPhone.getPhoneType());
+                        preparedStatement.setString(5, tempPhone.getComments());
+                        preparedStatement.setInt(6, tempPhone.getId());
+                        preparedStatement.addBatch();
+                    }
+                    preparedStatement.executeBatch();
+                    connection.commit();
+                }
+                if (phonesForCreate.size() > 0) {
+                    createPhones(connection, phonesForCreate, contact.getId());
+                }
+                if (phoneIdForDelete.length > 0) {
+                    String sql = "DELETE FROM phone WHERE phone_id=?";
+                    preparedStatement = connection.prepareStatement(sql);
+                    connection.setAutoCommit(false);
+                    for (int id : phoneIdForDelete) {
+                        preparedStatement.setInt(1, id);
+                        preparedStatement.addBatch();
+                    }
+                    preparedStatement.executeBatch();
+                    connection.commit();
+                }
+            }
         } catch (SQLException e) {
             log.error("Unable to update contact", e);
         } finally {
@@ -298,6 +350,27 @@ public class ContactDAOUtil implements ContactDAO {
             close(connection, statement, resultSet);
         }
         return result;
+    }
+
+    private void createPhones(Connection connection, List<Phone> phoneList, int contactId) throws SQLException {
+
+        String sql = "INSERT INTO phone (contact_id, country_code, operator_code, phone_number, phone_type," +
+                "comments) VALUES (?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        connection.setAutoCommit(false);
+
+        for (Phone tempPhone : phoneList) {
+            statement.setInt(1, contactId);
+            statement.setString(2, tempPhone.getCountryCode());
+            statement.setString(3, tempPhone.getOperatorCode());
+            statement.setString(4, tempPhone.getPhoneNumber());
+            statement.setString(5, tempPhone.getPhoneType());
+            statement.setString(6, tempPhone.getComments());
+            statement.addBatch();
+        }
+        statement.executeBatch();
+        connection.commit();
+        statement.close();
     }
 
     private void close(Connection connection, Statement statement, ResultSet resultSet) {
