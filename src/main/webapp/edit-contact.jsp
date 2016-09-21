@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/tabswitch.js"></script>
+    <script src="js/checkall.js"></script>
+    <script src="js/choosePopup.js"></script>
     <script src="js/popup.js"></script>
     <script src="js/addPhone.js"></script>
+    <script src="js/editPhone.js"></script>
+    <script src="js/deleteItems.js" defer></script>
 </head>
 <body>
 <div class="container">
@@ -269,12 +273,12 @@
                                     <p class="panel-title">Всего телефонов: ${CONTACT.phones.size()}</p>
                                 </div>
                                 <div class="col col-xs-8 text-right">
-                                    <button onclick="show('phoneEditPopup')" type="button"
+                                    <button onclick="show('phoneCreatePopup')" type="button"
                                             class="btn btn-sm btn-primary">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
                                         телефон
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary">
+                                    <button onclick="choosePopUp()" type="button" class="btn btn-sm btn-primary">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
                                     </button>
                                 </div>
@@ -282,9 +286,10 @@
                         </div>
                         <div class="table-responsive">
                             <table id="phoneTable" class="table table-hover table-bordered">
+                                <input type="hidden" id="idsForDel">
                                 <thead>
                                 <tr>
-                                    <th class="text-center"><input type="checkbox" name="checkAll"></th>
+                                    <th class="text-center"><input type="checkbox" id="All" onclick="checkAll(this)"/></th>
                                     <th>Телефонный номер</th>
                                     <th>Тип</th>
                                     <th>Комментарий</th>
@@ -292,20 +297,20 @@
                                 </thead>
                                 <tbody>
                                 <c:forEach var="tempPhone" items="${CONTACT.phones}">
-                                    <tr id="${tempPhone.countryCode}${tempPhone.operatorCode}${tempPhone.phoneNumber}">
-                                        <td class="text-center"><input type="checkbox" name="phoneCheck"></td>
-                                        <td><input type="hidden" name="phoneId" value="${tempPhone.id}">
-                                            <input type="hidden" name="countryCode" value="${tempPhone.countryCode}">
-                                            <input type="hidden" name="operatorCode" value="${tempPhone.operatorCode}">
-                                            <input type="hidden" name="phoneNumber" value="${tempPhone.phoneNumber}">
-                                            <a role="button"
-                                               onclick="editPhone(document);show('phoneEditPopup')">+${tempPhone.countryCode} ${tempPhone.operatorCode} ${tempPhone.phoneNumber}</a>
+                                    <tr id="row${tempPhone.id}">
+                                        <td class="text-center"><input type="checkbox" name="${tempPhone.id}"></td>
+                                        <td><a role="button" id="label${tempPhone.id}"
+                                               onclick="editPhone(${tempPhone.id});">${tempPhone.countryCode} ${tempPhone.operatorCode} ${tempPhone.phoneNumber}</a>
+                                            <input id="phoneId${tempPhone.id}" type="hidden" name="phoneId" value="${tempPhone.id}">
+                                            <input id="countryCode${tempPhone.id}" type="hidden" name="countryCode" value="${tempPhone.countryCode}">
+                                            <input id="operatorCode${tempPhone.id}" type="hidden" name="operatorCode" value="${tempPhone.operatorCode}">
+                                            <input id="phoneNumber${tempPhone.id}" type="hidden" name="phoneNumber" value="${tempPhone.phoneNumber}">
                                         </td>
                                         <td class="text-center">
-                                            <input type="hidden" name="phoneType" value="${tempPhone.phoneType}">
-                                                ${tempPhone.phoneType}</td>
-                                        <td><input type="hidden" name="phoneComments" value="${tempPhone.comments}">
-                                                ${tempPhone.comments}</td>
+                                            <input id="phoneType${tempPhone.id}" type="hidden" name="phoneType" value="${tempPhone.phoneType}">
+                                                <div id="phoneTypeLabel${tempPhone.id}">${tempPhone.phoneType}</div></td>
+                                        <td><input id="phoneComments${tempPhone.id}" type="hidden" name="phoneComments" value="${tempPhone.comments}">
+                                                <div id="phoneCommentsLabel${tempPhone.id}">${tempPhone.comments}</div></td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
@@ -323,13 +328,10 @@
                                     <p class="panel-title">Всего файлов: ${CONTACT.attachments.size()}</p>
                                 </div>
                                 <div class="col col-xs-8 text-right">
-                                    <button onclick="show('attachmentEditPopup')" type="button"
+                                    <button onclick="show('attachmentCreatePopup')" type="button"
                                             class="btn btn-sm btn-primary">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
                                         файл
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-primary">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
                                     </button>
                                 </div>
                             </div>
@@ -353,12 +355,17 @@
                                         <td class="text-center">${tempAttachment.uploadDate}</td>
                                         <td>${tempAttachment.comments}</td>
                                         <td class="text-center">
-                                            <a href="getAttachment?fileName=${tempAttachment.filename}"><span class="glyphicon glyphicon-download-alt"
-                                                     aria-hidden="true"></span></a>
+                                            <a href="getAttachment?fileName=${tempAttachment.filename}"><span
+                                                    class="glyphicon glyphicon-download-alt"
+                                                    aria-hidden="true"></span></a>
                                         </td>
                                         <td class="text-center">
-                                            <a><span class="glyphicon glyphicon-remove red"
-                                                     aria-hidden="true"></span></a>
+                                            <c:url var="removeLink" value="main">
+                                                <c:param name="command" value="removeAttachment"/>
+                                                <c:param name="fileName" value="${tempAttachment.filename}"/>
+                                            </c:url>
+                                            <a onclick="show('confirmationPopup'); bindRemoveBtn('${removeLink}')">
+                                                <span class="glyphicon glyphicon-remove red" aria-hidden="true"></span></a>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -375,8 +382,8 @@
 </div>
 </div>
 
-<!-- Popup for phone editing -->
-<div class="panel panel-default popup-phone" id="phoneEditPopup">
+<!-- Popup for phone creating -->
+<div class="panel panel-default popup-phone" id="phoneCreatePopup">
     <div class="form-group">
         <label for="countryCode">Код страны</label>
         <input id="countryCode" type="text" class="form-control" aria-describedby="basic-addon1"
@@ -404,12 +411,46 @@
         <input id="phoneComments" type="text" class="form-control" aria-describedby="basic-addon1"
                placeholder="Комментарий"><br/>
     </div>
-    <button onclick="addPhone();hide('phoneEditPopup')" class="btn btn-primary">Добавить</button>
+    <button onclick="addPhone();hide('phoneCreatePopup')" class="btn btn-primary">Добавить</button>
+    <button onclick="hide('phoneCreatePopup')" class="btn btn-primary pull-right">Отмена</button>
+</div>
+
+<!-- Popup for phone editing -->
+<div class="panel panel-default popup-phone" id="phoneEditPopup">
+    <div class="form-group">
+        <label for="countryCode">Код страны</label>
+        <input id="newCountryCode" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Код страны" required>
+    </div>
+    <div class="form-group">
+        <label for="operatorCode">Код оператора</label>
+        <input id="newOperatorCode" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Код оператора">
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Номер телефона</label>
+        <input id="newPhoneNumber" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Номер телефона" required>
+    </div>
+    <div class="form-group">
+        <label for="phoneType">Тип телефона</label>
+        <select id="newPhoneType" class="form-control">
+            <option value="1" selected="selected">мобильный</option>
+            <option value="2">домашний</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="phoneComments">Комментарий</label>
+        <input id="newPhoneComments" type="text" class="form-control" aria-describedby="basic-addon1"
+               placeholder="Комментарий"><br/>
+    </div>
+    <input type="hidden" id="phoneGUID">
+    <button onclick="update();hide('phoneEditPopup')" class="btn btn-primary">Сохранить</button>
     <button onclick="hide('phoneEditPopup')" class="btn btn-primary pull-right">Отмена</button>
 </div>
 
 <!-- Popup for attachment editing -->
-<div class="panel panel-default popup-attachment" id="attachmentEditPopup">
+<div class="panel panel-default popup-attachment" id="attachmentCreatePopup">
     <form action="main" enctype="multipart/form-data" method="POST">
         <div class="form-group">
             <label for="fileName">Файл</label>
@@ -417,14 +458,40 @@
         </div>
         <div class="form-group">
             <label for="attachmentComments">Комментарий</label>
-            <input id="attachmentComments" type="text" class="form-control" name="comments" aria-describedby="basic-addon1"
+            <input id="attachmentComments" type="text" class="form-control" name="comments"
+                   aria-describedby="basic-addon1"
                    placeholder="Комментарий">
         </div>
         <input type="hidden" name="command" value="addAttachment">
         <input value="Добавить" type="submit" class="btn btn-primary"/>
-        <button onclick="hide('attachmentEditPopup')" class="btn btn-primary pull-right">Отмена</button>
+        <button type="button" onclick="hide('attachmentCreatePopup')" class="btn btn-primary pull-right">Отмена</button>
     </form>
 </div>
+
+<div class="panel panel-default popupSmall" id="confirmationPopup">
+    <h4 class="text-center">Удалить файл?</h4>
+    <div class="row">
+        <div class="col-sm-12">
+            <a type="button" class="btn btn-default popup-btn" id="confirmDelete" onclick="hide('confirmationPopup');">Да</a>
+            <button class="btn btn-default popup-btn pull-right" onclick="hide('confirmationPopup');">Нет</button>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default popupSmall" id="popupConfirm">
+    <h4 class="text-center">Удалить выбранные телефоны?</h4>
+    <div class="row">
+        <div class="col-sm-12">
+            <button onclick="hide('popupConfirm');delCheckedPhones()" class="btn btn-default popup-btn">Да
+            </button>
+            <button onclick="hide('popupConfirm')" class="btn btn-default popup-btn pull-right">Нет</button>
+        </div>
+    </div>
+</div>
+
+<div class="popupSmall" id="popupEmptySet">
+    <h4 class="text-center">Выберите телефоны для удаления!</h4><br/>
+    <button onclick="hide('popupEmptySet')" class="btn btn-default center-block">Ок</button>
 </div>
 </body>
 </html>

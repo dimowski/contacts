@@ -16,6 +16,13 @@
 }
 
 /* Popup windows styles */
+
+.popup-btn {
+    margin-left: 35px;
+    margin-right: 35px;
+    margin-top: 55px;
+}
+
 .popupSmall {
     display: none;
     position: fixed;

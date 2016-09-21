@@ -5,7 +5,7 @@ import com.itechart.contactapp.model.Attachment;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface FileUploader {
+public interface FileManager {
 
     /**
      * Returns the String which is the representation of the path to the uploaded file. If file is not uploaded,
@@ -19,5 +19,6 @@ public interface FileUploader {
 
     String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response);
 
-    void downloadProfilePhoto(String photo, HttpServletResponse response);
+    void removeAttachment(HttpServletRequest request, HttpServletResponse response);
+
 }

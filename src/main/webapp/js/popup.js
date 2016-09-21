@@ -8,3 +8,8 @@ var show = function (id) {
 var hide = function (id) {
     $(id).style.display = 'none';
 }
+
+function bindRemoveBtn(url) {
+    var btn = document.getElementById('confirmDelete');
+    btn.setAttribute('href', url);
+}

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/checkall.js"></script>
-    <script src="js/deleteContact.js"></script>
+    <script src="js/deleteItems.js"></script>
     <script src="js/choosePopup.js"></script>
     <script src="js/popup.js"></script>
 </head>
@@ -146,14 +146,13 @@
     </div>
 </div>
 <!-- Popup windows -->
-<div class="popupSmall" id="popupConfirm">
+<div class="panel panel-default popupSmall" id="popupConfirm">
     <h4 class="text-center">Удалить выбранные контакты?</h4>
     <div class="row">
-        <div class="col-sm-6">
-            <button onclick="hide('popupConfirm');delCheckedContacts()" class="btn btn-default text-left">Да</button>
-        </div>
-        <div class="col-sm-6">
-            <button onclick="hide('popupConfirm')" class="btn btn-default text-right">Нет</button>
+        <div class="col-sm-12">
+            <button onclick="hide('popupConfirm');delCheckedContacts()" class="btn btn-default popup-btn">Да
+            </button>
+            <button onclick="hide('popupConfirm')" class="btn btn-default popup-btn">Нет</button>
         </div>
     </div>
 </div>

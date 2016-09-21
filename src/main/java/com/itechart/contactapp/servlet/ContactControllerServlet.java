@@ -63,6 +63,9 @@ public class ContactControllerServlet extends HttpServlet {
             case "createContact":
                 contactService.createContact(request, response);
                 break;
+            case "removeAttachment":
+                contactService.removeAttachment(request, response);
+                break;
             default:
                 break;
         }

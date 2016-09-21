@@ -23,4 +23,6 @@ public interface ContactDAO {
     void createContact(Contact contact);
 
     void createAttachment(Attachment attachment);
+
+    void removeAttachment(int contactId, String fileName);
 }

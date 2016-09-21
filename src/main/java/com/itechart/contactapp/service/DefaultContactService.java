@@ -2,8 +2,8 @@ package com.itechart.contactapp.service;
 
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
-import com.itechart.contactapp.helper.FileUploader;
-import com.itechart.contactapp.helper.UploadFileToServer;
+import com.itechart.contactapp.helper.FileManager;
+import com.itechart.contactapp.helper.FileManagerUtil;
 import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
@@ -115,8 +115,8 @@ public class DefaultContactService implements ContactService {
         String status = request.getParameter("status");
         String email = request.getParameter("email");
         String jobCurrent = request.getParameter("jobCurrent");
-        FileUploader fileUploader = new UploadFileToServer(properties);
-        String photo = fileUploader.uploadProfilePhoto(request, response);
+        FileManager fileManager = new FileManagerUtil(properties);
+        String photo = fileManager.uploadProfilePhoto(request, response);
 
         String country = request.getParameter("country");
         String city = request.getParameter("city");
@@ -128,10 +128,10 @@ public class DefaultContactService implements ContactService {
 
         // EDIT FROM HERE!
         List<Phone> phoneList = null;
-        String[] phoneType = request.getParameterValues("phoneType");
-        if (phoneType != null) {
-            phoneList = new ArrayList<>(phoneType.length);
-            String[] phoneId = request.getParameterValues("phoneId");
+        String[] phoneId = request.getParameterValues("phoneId");
+        if (phoneId != null) {
+            phoneList = new ArrayList<>(phoneId.length);
+            String[] phoneType = request.getParameterValues("phoneType");
             String[] countryCode = request.getParameterValues("countryCode");
             String[] operatorCode = request.getParameterValues("operatorCode");
             String[] phoneNumber = request.getParameterValues("phoneNumber");
@@ -164,14 +164,31 @@ public class DefaultContactService implements ContactService {
 
     @Override
     public void addAttachment(HttpServletRequest request, HttpServletResponse response) {
-        FileUploader fileUploader = new UploadFileToServer(properties);
-        Attachment attachment = fileUploader.uploadAttachment(request, response);
+        FileManager fileManager = new FileManagerUtil(properties);
+        Attachment attachment = fileManager.uploadAttachment(request, response);
 
-        contactDAO.createAttachment(attachment);
+        if (attachment != null)
+            contactDAO.createAttachment(attachment);
+        int contactId = ((Contact) request.getSession().getAttribute("CONTACT")).getId();
         try {
-            response.sendRedirect("edit-contact.jsp");
+            response.sendRedirect("main?command=editContact&contactId=" + contactId);
         } catch (IOException e) {
-            log.error("Unable to redirect to main page", e);
+            log.error("Unable to redirect to page", e);
+        }
+    }
+
+    @Override
+    public void removeAttachment(HttpServletRequest request, HttpServletResponse response) {
+        FileManager fileManager = new FileManagerUtil(properties);
+        fileManager.removeAttachment(request, response);
+
+        String fileName = request.getParameter("fileName");
+        int contactId = ((Contact) request.getSession().getAttribute("CONTACT")).getId();
+        contactDAO.removeAttachment(contactId, fileName);
+        try {
+            response.sendRedirect("main?command=editContact&contactId=" + contactId);
+        } catch (IOException e) {
+            log.error("Unable to redirect to page", e);
         }
     }
 

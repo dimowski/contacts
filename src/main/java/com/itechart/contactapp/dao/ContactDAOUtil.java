@@ -144,17 +144,30 @@ public class ContactDAOUtil implements ContactDAO {
     public void createAttachment(Attachment attachment) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
         try {
             connection = dataSource.getConnection();
-            String sql = "INSERT INTO attachment (contact_id, filename, upload_date, comments)" +
-                    "VALUES (?, ?, ?, ?)";
-
+            String sql = "INSERT INTO attachment (contact_id, filename, upload_date, comments) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, attachment.getContactId());
             preparedStatement.setString(2, attachment.getFilename());
             preparedStatement.setTimestamp(3, new Timestamp(attachment.getUploadDate().getTime()));
             preparedStatement.setString(4, attachment.getComments());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            log.error(e);
+        }
+    }
+
+    @Override
+    public void removeAttachment(int contactId, String fileName) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = dataSource.getConnection();
+            String sql = "DELETE FROM attachment WHERE contact_id=? AND filename=?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, contactId);
+            preparedStatement.setString(2, fileName);
             preparedStatement.execute();
         } catch (SQLException e) {
             log.error(e);
@@ -218,7 +231,10 @@ public class ContactDAOUtil implements ContactDAO {
             preparedStatement.setString(1, contact.getFirstName());
             preparedStatement.setString(2, contact.getLastName());
             preparedStatement.setString(3, contact.getMiddleName());
-            preparedStatement.setDate(4, new java.sql.Date(contact.getBirthday().getTime()));
+            if (contact.getBirthday() != null) {
+                preparedStatement.setDate(4, new java.sql.Date(contact.getBirthday().getTime()));
+            } else
+                preparedStatement.setDate(4, null);
             preparedStatement.setString(5, contact.getStatus());
             preparedStatement.setString(6, contact.getGender());
             preparedStatement.setString(7, contact.getCitizenship());

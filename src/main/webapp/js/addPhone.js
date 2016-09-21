@@ -17,12 +17,27 @@ function addPhone() {
     cell1.className += "text-center";
     cell3.className += "text-center";
 
-    cell1.innerHTML = "<input type='checkbox' name='" + fullPhone + "'>";
-    cell2.innerHTML = "<a role='button'>" + fullPhone + "</a>" +
-        "<input type='hidden' name='phoneId' value='0'>" + /*phoneId = 0 when phone needs to be created*/
-        "<input type='hidden' name='countryCode' value='" + countryCode + "'>" +
-        "<input type='hidden' name='operatorCode' value='" + operatorCode + "'>" +
-        "<input type='hidden' name='phoneNumber' value='" + phoneNumber + "'>";
-    cell3.innerHTML = phoneType + "<input type='hidden' name='phoneType' value='" + phoneType + "'>";
-    cell4.innerHTML = comments + "<input type='hidden' name='phoneComments' value='" + comments + "'>";
+    var GUID = guidGenerator();
+
+    row.id = "row" + GUID;
+    cell1.innerHTML = "<input type='checkbox' name='" + GUID + "'>";
+    cell2.innerHTML = "<a role='button' id='label" + GUID + "' onclick=editPhone('" + GUID + "')>" + fullPhone + "</a>" +
+        "<input id='phoneId" + GUID + "' type='hidden' name='phoneId' value='0'>" + /*phoneId = 0 when phone needs to be created*/
+        "<input id='countryCode" + GUID + "' type='hidden' name='countryCode' value='" + countryCode + "'>" +
+        "<input id='operatorCode" + GUID + "' type='hidden' name='operatorCode' value='" + operatorCode + "'>" +
+        "<input id='phoneNumber" + GUID + "' type='hidden' name='phoneNumber' value='" + phoneNumber + "'>";
+    cell3.innerHTML = "<div id='phoneTypeLabel" + GUID + "'>" + phoneType + "</div><input id='phoneType" + GUID + "' type='hidden' name='phoneType' value='" + phoneType + "'>";
+    cell4.innerHTML ="<div id='phoneCommentsLabel" + GUID + "'>" + comments + "</div><input id='phoneComments" + GUID + "' type='hidden' name='phoneComments' value='" + comments + "'>";
+
+    document.getElementById("countryCode").value = "";
+    document.getElementById("operatorCode").value = "";
+    document.getElementById("phoneNumber").value = "";
+    document.getElementById("phoneComments").value = "";
+}
+
+function guidGenerator() {
+    var S4 = function () {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
