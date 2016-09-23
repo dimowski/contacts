@@ -5,15 +5,11 @@ import com.itechart.contactapp.command.CommandFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,8 +19,6 @@ public class ContactControllerServlet extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(ContactControllerServlet.class);
 
-    @Resource(name = "jdbc/dmitry_kach_db")
-    private DataSource dataSource;
     public static Properties properties;
 
     @Override
@@ -44,7 +38,7 @@ public class ContactControllerServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        Command command = CommandFactory.getCommand(request, dataSource);
+        Command command = CommandFactory.getCommand(request);
         String view = command.execute(request, response);
         log.debug("VIEW {}", view);
         try {

@@ -10,7 +10,8 @@ public class CommandFactory {
 
     private static final Logger log = LogManager.getLogger(CommandFactory.class);
 
-    public static Command getCommand(ServletRequest request, DataSource dataSource) {
+    public static Command getCommand(ServletRequest request) {
+        DataSource dataSource = (DataSource) request.getServletContext().getAttribute("dataSource");
         String theCommand = request.getParameter("command");
         log.info("Command = {}", theCommand);
         if (theCommand == null) {

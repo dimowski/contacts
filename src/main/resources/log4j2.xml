@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" name="ContactApp" packages="">
     <Appenders>
-        <File name="FileAppender" fileName="../dk_app_logs/contactapp.log" append="false">
+        <RollingFile name="RollingFile" fileName="../dk_app_logs/contactapp.log"
+                     filePattern="../dk_app_logs/contactapp-%d{MM-dd-yyyy}-%i.log" append="false">
             <PatternLayout>
                 <Pattern>%d [%p] %c{1}.%M %m%n</Pattern>
             </PatternLayout>
-        </File>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="1"/>
+        </RollingFile>
     </Appenders>
-
     <Loggers>
         <Root level="debug">
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="RollingFile"/>
         </Root>
     </Loggers>
 </Configuration>

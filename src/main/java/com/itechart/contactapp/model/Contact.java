@@ -28,6 +28,13 @@ public class Contact {
     private List<Phone> phones;
     private List<Attachment> attachments;
 
+    public Contact(int id, String firstName, String lastName, String middleName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+    }
+
     public Contact(String firstName, String lastName, String middleName, Date birthday, String status, String gender,
                    String citizenship, String webSite, String email, String jobCurrent, Address address, String photo,
                    List<Phone> phones) {

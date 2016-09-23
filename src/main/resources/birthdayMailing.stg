@@ -1,0 +1,4 @@
+birthday(contacts) ::= <<
+     Hi! This is a list of people born on this day:
+    <contacts:{ contact |<\t><i>. <contact.firstName> <contact.lastName> <contact.middleName> (id:<contact.id>)<\n>}>
+>>

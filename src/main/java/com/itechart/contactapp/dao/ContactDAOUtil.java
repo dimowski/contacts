@@ -22,6 +22,37 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     @Override
+    public List<Contact> getContactsByTodayBirthday() {
+        List<Contact> contacts = new ArrayList<>();
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT contact_id, first_name, last_name, middle_name FROM contacts WHERE " +
+                    "MONTH(birthday) = MONTH(NOW()) AND DAY(birthday) = DAY(NOW());";
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("contact_id");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String middleName = resultSet.getString("middle_name");
+                Contact tempContact = new Contact(id, firstName, lastName, middleName);
+                contacts.add(tempContact);
+            }
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            close(connection, statement, resultSet);
+        }
+        return contacts;
+    }
+
+    @Override
     public Map<Integer, Contact> getContacts(int page) {
         Map<Integer, Contact> contacts = new HashMap<>();
 
