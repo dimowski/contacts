@@ -12,9 +12,9 @@ public interface ContactService {
 
     void saveContact(HttpServletRequest request, HttpServletResponse response);
 
-    void listContacts(HttpServletRequest request, HttpServletResponse response);
+    void showContactsList(HttpServletRequest request, HttpServletResponse response);
 
-    void fillContact(HttpServletRequest request, HttpServletResponse response);
+    void editContact(HttpServletRequest request, HttpServletResponse response);
 
     void addAttachment(HttpServletRequest request, HttpServletResponse response);
 

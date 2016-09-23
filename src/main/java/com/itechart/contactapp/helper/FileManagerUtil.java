@@ -37,8 +37,9 @@ public class FileManagerUtil implements FileManager {
             InputStream fileContentStream = filePart.getInputStream();
             log.debug("UPLOAD LOCATION = {}, FILE NAME = {}", properties.getProperty("users.attachments"), fileName);
             File repository = new File(properties.getProperty("users.attachments"));
-            if (!repository.exists())
-                repository.mkdir();
+            if (!repository.exists()) {
+                repository.mkdirs();
+            }
             File newAttachment = new File(repository, fileName);
             Files.copy(fileContentStream, newAttachment.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
@@ -52,7 +53,7 @@ public class FileManagerUtil implements FileManager {
         String fileName = properties.getProperty("users.attachments") + "/" + request.getParameter("fileName");
         log.debug("{} WILL BE REMOVED!", fileName);
         File deleteFile = new File(fileName);
-        if(deleteFile.exists())
+        if (deleteFile.exists())
             deleteFile.delete();
     }
 
@@ -66,9 +67,10 @@ public class FileManagerUtil implements FileManager {
                 return null;
             InputStream fileContentStream = filePart.getInputStream();
             File repository = new File(properties.getProperty("users.photo"));
-            if (!repository.exists())
-                repository.mkdir();
-            log.debug("UPLOAD LOCATION = {}, FILE NAME = {}", properties.getProperty("users.photo"), fileName);
+            if (!repository.exists()) {
+                repository.mkdirs();
+            }
+            log.debug("FILE NAME = {}", fileName);
 
             File newPhoto = new File(repository, fileName);
             Files.copy(fileContentStream, newPhoto.toPath(), StandardCopyOption.REPLACE_EXISTING);

@@ -63,7 +63,7 @@
                     <li role="presentation" class="tabmenu" id="tab_4">
                         <a href="#" onclick="switchTab('atchment_tab','content_4','tab_4');return false;"
                            id="atcment_tab">
-                            Присоединения
+                            Файлы
                         </a>
                     </li>
                 </ul>
