@@ -1,0 +1,10 @@
+template1(contact) ::= <<
+    Добрый день, <contact.firstName> <contact.lastName>! Поздравляем вас с праздником!
+>>
+
+template2(contact) ::= <<
+    Greetings, <contact.firstName> <contact.lastName>, on your birthday! You have reached a new milestone. All of us at
+Doe Corporation join in wishing you Happy Birthday and express our appreciation and admiration for all you have
+accomplished. We are confident you will continue to even greater heights. Thanks for all you do to make us look good.
+We enclose a book which has been signed by the entire staff. Happy reading.
+>>

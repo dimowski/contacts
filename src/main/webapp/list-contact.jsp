@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/checkall.js"></script>
-    <script src="js/deleteItems.js"></script>
+    <script src="js/itemsAction.js"></script>
     <script src="js/choosePopup.js"></script>
     <script src="js/popup.js"></script>
 </head>
@@ -47,7 +47,7 @@
                     <a href="main?command=createContact" type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить контакт
                     </a>
-                    <a type="button" class="btn btn-sm btn-primary btn-create" href="email-form.jsp">
+                    <a onclick="sendEmailToContacts()" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
                     </a>
                     <a onclick="choosePopUp()" class="btn btn-sm btn-primary btn-create">

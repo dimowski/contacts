@@ -32,6 +32,10 @@ public class CommandFactory {
                 return new RemoveAttachmentCommand(dataSource);
             case "addAttachment":
                 return new AddAttachmentCommand(dataSource);
+            case "emailForm":
+                return new FillEmailFormCommand();
+            case "sendEmail":
+                return new SendEmailCommand();
             default:
                 return null;
         }

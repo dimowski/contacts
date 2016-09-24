@@ -38,6 +38,7 @@ public class ContactServletListener implements ServletContextListener {
             log.error("Unable to initialize properties file", e);
         }
         servletContextEvent.getServletContext().setAttribute("dataSource", dataSource);
+        servletContextEvent.getServletContext().setAttribute("mailing.properties", properties);
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new DailyMailingJob(dataSource, properties), 0, 1, TimeUnit.DAYS);

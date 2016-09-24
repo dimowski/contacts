@@ -28,3 +28,16 @@ function delCheckedPhones() {
         }
     }
 }
+
+function sendEmailToContacts() {
+    var checkedBoxes = document.querySelectorAll('input[type=checkbox]:checked');
+    var str = "";
+    if (checkedBoxes.length != 0) {
+        for (var i = 0; i < checkedBoxes.length; i++) {
+            if (checkedBoxes[i].getAttribute("id") != "checkAll") {
+                str += checkedBoxes[i].getAttribute("name") + ",";
+            }
+        }
+    }
+    window.location.href = 'main?command=emailForm&contacts=' + str.substr(0, str.length - 1);
+}

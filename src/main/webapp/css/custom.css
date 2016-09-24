@@ -86,3 +86,7 @@
     background: #FFF;
     z-index: -1;
 }
+
+.input-group-cust {
+    margin-right: 15px;
+}

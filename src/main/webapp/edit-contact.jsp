@@ -13,7 +13,7 @@
     <script src="js/popup.js"></script>
     <script src="js/addPhone.js"></script>
     <script src="js/editPhone.js"></script>
-    <script src="js/deleteItems.js" defer></script>
+    <script src="js/itemsAction.js" defer></script>
 </head>
 <body>
 <div class="container">
