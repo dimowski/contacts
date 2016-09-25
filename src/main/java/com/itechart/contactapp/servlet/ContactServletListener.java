@@ -25,11 +25,9 @@ public class ContactServletListener implements ServletContextListener {
     @Resource(name = "jdbc/dmitry_kach_db")
     private DataSource dataSource;
 
-    private Properties properties;
-
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        properties = new Properties();
+        Properties properties = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream input = classLoader.getResourceAsStream("mailServer.properties");
         try {

@@ -36,6 +36,8 @@ public class CommandFactory {
                 return new FillEmailFormCommand();
             case "sendEmail":
                 return new SendEmailCommand();
+            case "search":
+                return new SearchContactsCommand(dataSource);
             default:
                 return null;
         }

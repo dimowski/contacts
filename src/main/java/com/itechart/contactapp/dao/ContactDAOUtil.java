@@ -1,5 +1,9 @@
 package com.itechart.contactapp.dao;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.JdbcEscape;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.itechart.contactapp.helper.Column;
 import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
@@ -9,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
@@ -19,6 +25,77 @@ public class ContactDAOUtil implements ContactDAO {
 
     public ContactDAOUtil(DataSource theDataSource) {
         dataSource = theDataSource;
+    }
+
+    @Override
+    public Map<Integer, Contact> searchContacts(Map<String, String> params) {
+        SelectQuery sql = new SelectQuery();
+        sql.addAllColumns().addCustomFromTable("contacts");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String param = entry.getKey();
+                switch (param) {
+                    case "birthSince":
+                        sql.addCondition(BinaryCondition.greaterThan(new Column("birthday"), JdbcEscape.date(format.parse(entry.getValue())), true));
+                        break;
+                    case "birthUpto":
+                        sql.addCondition(BinaryCondition.lessThan(new Column("birthday"), JdbcEscape.date(format.parse(entry.getValue())), true));
+                        break;
+                    default:
+                        String value = "%" + entry.getValue() + "%";
+                        sql.addCondition(BinaryCondition.like(new Column(param), value));
+                        break;
+                }
+            }
+        } catch (ParseException e) {
+            log.error(e);
+        }
+        String query = sql.validate().toString();
+        log.debug(query);
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Map<Integer, Contact> searchResult = new HashMap<>();
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int contactId = resultSet.getInt("contact_id");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String middleName = resultSet.getString("middle_name");
+                Date birthday = resultSet.getDate("birthday");
+                String status = resultSet.getString("status");
+                String gender = resultSet.getString("gender");
+                String citizenship = resultSet.getString("citizenship");
+                String webSite = resultSet.getString("web_site");
+                String email = resultSet.getString("email");
+                String photo = resultSet.getString("photo");
+                String jobCurrent = resultSet.getString("job_current");
+
+                String country = resultSet.getString("country");
+                String city = resultSet.getString("city");
+                String street = resultSet.getString("street");
+                String house = resultSet.getString("house");
+                String flat = resultSet.getString("flat");
+                String zipCode = resultSet.getString("zip_code");
+
+                Address address = new Address(country, city, street, house, flat, zipCode);
+
+                Contact theContact = new Contact(contactId, firstName, lastName, middleName, birthday, status, gender,
+                        citizenship, webSite, email, jobCurrent, address, photo);
+                searchResult.put(theContact.getId(), theContact);
+            }
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            close(connection, statement, resultSet);
+        }
+        return searchResult;
     }
 
     @Override

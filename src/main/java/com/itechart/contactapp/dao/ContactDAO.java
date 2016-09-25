@@ -4,7 +4,6 @@ import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.model.Phone;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,4 +27,6 @@ public interface ContactDAO {
     void removeAttachment(int contactId, String fileName);
 
     List<Contact> getContactsByTodayBirthday();
+
+    Map<Integer, Contact> searchContacts(Map<String, String> params);
 }
