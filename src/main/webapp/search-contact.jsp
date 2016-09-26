@@ -40,14 +40,6 @@
                 <div class="col-sm-4">
                     <h3 class="panel-title">Поиск контактов</h3>
                 </div>
-                <div class="col-sm-8 text-right">
-                    <a type="button">
-                        <span class="glyphicon glyphicon-collapse-up glyph-big" aria-hidden="true"></span>
-                    </a>
-                    <a type="button">
-                        <span class="glyphicon glyphicon-collapse-down glyph-big" aria-hidden="true"></span>
-                    </a>
-                </div>
             </div>
         </div>
         <div class="panel-body">

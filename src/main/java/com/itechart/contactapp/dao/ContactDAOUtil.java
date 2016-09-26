@@ -1,9 +1,9 @@
 package com.itechart.contactapp.dao;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.JdbcEscape;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
-import com.itechart.contactapp.helper.Column;
 import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
@@ -38,14 +38,14 @@ public class ContactDAOUtil implements ContactDAO {
                 String param = entry.getKey();
                 switch (param) {
                     case "birthSince":
-                        sql.addCondition(BinaryCondition.greaterThan(new Column("birthday"), JdbcEscape.date(format.parse(entry.getValue())), true));
+                        sql.addCondition(BinaryCondition.greaterThan(new CustomSql("birthday"), JdbcEscape.date(format.parse(entry.getValue())), true));
                         break;
                     case "birthUpto":
-                        sql.addCondition(BinaryCondition.lessThan(new Column("birthday"), JdbcEscape.date(format.parse(entry.getValue())), true));
+                        sql.addCondition(BinaryCondition.lessThan(new CustomSql("birthday"), JdbcEscape.date(format.parse(entry.getValue())), true));
                         break;
                     default:
                         String value = "%" + entry.getValue() + "%";
-                        sql.addCondition(BinaryCondition.like(new Column(param), value));
+                        sql.addCondition(BinaryCondition.like(new CustomSql(param), value));
                         break;
                 }
             }
@@ -179,107 +179,6 @@ public class ContactDAOUtil implements ContactDAO {
             close(connection, statement, resultSet);
         }
         return contacts;
-    }
-
-    @Override
-    public List<Phone> getPhonesByContactId(int contactId) {
-        List<Phone> phones = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = dataSource.getConnection();
-            String sql = "SELECT * FROM phone WHERE contact_id = ?";
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, contactId);
-            resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("phone_id");
-                String countryCode = resultSet.getString("country_code");
-                String operatorCode = resultSet.getString("operator_code");
-                String phoneNumber = resultSet.getString("phone_number");
-                String phoneType = resultSet.getString("phone_type");
-                String comments = resultSet.getString("comments");
-
-                Phone tempPhone = new Phone(id, countryCode, operatorCode, phoneNumber, phoneType, comments);
-                phones.add(tempPhone);
-            }
-        } catch (SQLException e) {
-            log.error(e);
-        } finally {
-            close(connection, statement, resultSet);
-        }
-        log.info(phones.size() + " phones retrieved");
-        return phones;
-    }
-
-    @Override
-    public List<Attachment> getAttachmentsByContactId(int contactId) {
-        List<Attachment> attachments = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = dataSource.getConnection();
-            String sql = "SELECT * FROM attachment WHERE contact_id = ?";
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, contactId);
-            resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("attachment_id");
-                String filename = resultSet.getString("filename");
-                Date uploadDate = resultSet.getDate("upload_date");
-                String comments = resultSet.getString("comments");
-
-                Attachment tempAttachment = new Attachment(id, filename, uploadDate, comments);
-                attachments.add(tempAttachment);
-            }
-        } catch (SQLException e) {
-            log.error(e);
-        } finally {
-            close(connection, statement, resultSet);
-        }
-        return attachments;
-    }
-
-    @Override
-    public void createAttachment(Attachment attachment) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            String sql = "INSERT INTO attachment (contact_id, filename, upload_date, comments) VALUES (?, ?, ?, ?)";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, attachment.getContactId());
-            preparedStatement.setString(2, attachment.getFilename());
-            preparedStatement.setTimestamp(3, new Timestamp(attachment.getUploadDate().getTime()));
-            preparedStatement.setString(4, attachment.getComments());
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            log.error(e);
-        }
-    }
-
-    @Override
-    public void removeAttachment(int contactId, String fileName) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            String sql = "DELETE FROM attachment WHERE contact_id=? AND filename=?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, contactId);
-            preparedStatement.setString(2, fileName);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            log.error(e);
-        }
     }
 
     @Override
@@ -481,7 +380,7 @@ public class ContactDAOUtil implements ContactDAO {
         statement.close();
     }
 
-    private void close(Connection connection, Statement statement, ResultSet resultSet) {
+    public static void close(Connection connection, Statement statement, ResultSet resultSet) {
         try {
             if (resultSet != null) {
                 resultSet.close();

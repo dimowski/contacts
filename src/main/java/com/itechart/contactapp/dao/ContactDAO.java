@@ -12,19 +12,11 @@ public interface ContactDAO {
 
     int getContactsCount();
 
-    List<Phone> getPhonesByContactId(int contactId);
-
-    List<Attachment> getAttachmentsByContactId(int contactId);
-
     void deleteContacts(String contacts);
 
     void updateContact(Contact contact, int[] phoneIdForDelete);
 
     void createContact(Contact contact);
-
-    void createAttachment(Attachment attachment);
-
-    void removeAttachment(int contactId, String fileName);
 
     List<Contact> getContactsByTodayBirthday();
 

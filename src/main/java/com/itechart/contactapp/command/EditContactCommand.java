@@ -1,7 +1,9 @@
 package com.itechart.contactapp.command;
 
-import com.itechart.contactapp.dao.ContactDAO;
-import com.itechart.contactapp.dao.ContactDAOFactory;
+import com.itechart.contactapp.dao.AttachmentDAO;
+import com.itechart.contactapp.dao.AttachmentDAOFactory;
+import com.itechart.contactapp.dao.PhoneDAO;
+import com.itechart.contactapp.dao.PhoneDAOFactory;
 import com.itechart.contactapp.model.Contact;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,11 +17,12 @@ public class EditContactCommand implements Command {
 
     private static final Logger log = LogManager.getLogger(EditContactCommand.class);
 
-    //private ContactService contactService = ContactServiceFactory.getContactService();
-    private ContactDAO contactDAO;
+    private PhoneDAO phoneDAO;
+    private AttachmentDAO attachmentDAO;
 
     public EditContactCommand(DataSource dataSource) {
-        contactDAO = ContactDAOFactory.getContactDAO(dataSource);
+        phoneDAO = PhoneDAOFactory.getPhoneDAO(dataSource);
+        attachmentDAO = AttachmentDAOFactory.getAttachmentDAO(dataSource);
     }
 
     @Override
@@ -30,8 +33,8 @@ public class EditContactCommand implements Command {
         Map<Integer, Contact> tempList = (Map<Integer, Contact>) request.getSession().getAttribute("CONTACT_LIST");
 
         Contact theContact = tempList.get(contactId);
-        theContact.setPhones(contactDAO.getPhonesByContactId(contactId));
-        theContact.setAttachments(contactDAO.getAttachmentsByContactId(contactId));
+        theContact.setPhones(phoneDAO.getPhonesByContactId(contactId));
+        theContact.setAttachments(attachmentDAO.getAttachmentsByContactId(contactId));
 
         request.getSession().setAttribute("CONTACT", theContact);
         return "/edit-contact.jsp";

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 
 <html>
@@ -171,6 +172,12 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </c:when>
+                                                <c:otherwise>
+                                                    <option>женат</option>
+                                                    <option>холост</option>
+                                                    <option>замужем</option>
+                                                    <option>не замужем</option>
+                                                </c:otherwise>
                                             </c:choose>
                                         </select>
                                     </div>
@@ -353,7 +360,9 @@
                                 <c:forEach var="tempAttachment" items="${CONTACT.attachments}">
                                     <tr>
                                         <td><a href="#">${tempAttachment.filename}</a></td>
-                                        <td class="text-center">${tempAttachment.uploadDate}</td>
+                                        <td class="text-center">
+                                            <fmt:formatDate value="${tempAttachment.uploadDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                                        </td>
                                         <td>${tempAttachment.comments}</td>
                                         <td class="text-center">
                                             <a href="getAttachment?fileName=${tempAttachment.filename}"><span

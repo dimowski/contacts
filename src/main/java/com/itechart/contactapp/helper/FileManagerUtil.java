@@ -2,6 +2,7 @@ package com.itechart.contactapp.helper;
 
 import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +64,7 @@ public class FileManagerUtil implements FileManager {
         try {
             Part filePart = request.getPart("profilePhoto");
             fileName = filePart.getSubmittedFileName();
-            if (fileName.equals(""))
+            if (StringUtils.isEmpty(fileName))
                 return null;
             InputStream fileContentStream = filePart.getInputStream();
             File repository = new File(properties.getProperty("users.photo"));

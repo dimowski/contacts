@@ -1,5 +1,7 @@
 package com.itechart.contactapp.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Address {
 
     private String country;
@@ -10,7 +12,7 @@ public class Address {
 
     private String zipCode;
 
-    public Address(String country, String city, String street, String house, String flat,String zipCode) {
+    public Address(String country, String city, String street, String house, String flat, String zipCode) {
         this.country = country;
         this.city = city;
         this.street = street;
@@ -21,15 +23,15 @@ public class Address {
 
     @Override
     public String toString() {
-        String[] fullAddress = {country, city, street, house};
+        String[] fullAddress = {country, city, street, house, flat};
         String result = "";
-        String separator = "";
         for (String s : fullAddress) {
-            if (s != null)
-                result += separator + s;
-            separator = ", ";
+            if (StringUtils.isNotEmpty(s))
+                result += s + ", ";
         }
-        return result + "/" + flat;
+        if (StringUtils.isNotEmpty(result))
+            return result.substring(0, result.length() - 2);
+        else return result;
     }
 
     public String getCountry() {

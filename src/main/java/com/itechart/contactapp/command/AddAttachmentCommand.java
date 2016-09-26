@@ -1,7 +1,7 @@
 package com.itechart.contactapp.command;
 
-import com.itechart.contactapp.dao.ContactDAO;
-import com.itechart.contactapp.dao.ContactDAOFactory;
+import com.itechart.contactapp.dao.AttachmentDAO;
+import com.itechart.contactapp.dao.AttachmentDAOFactory;
 import com.itechart.contactapp.helper.FileManager;
 import com.itechart.contactapp.helper.FileManagerUtil;
 import com.itechart.contactapp.model.Attachment;
@@ -18,10 +18,10 @@ public class AddAttachmentCommand implements Command {
 
     private static final Logger log = LogManager.getLogger(AddAttachmentCommand.class);
 
-    private ContactDAO contactDAO;
+    private AttachmentDAO attachmentDAO;
 
     public AddAttachmentCommand(DataSource dataSource) {
-        contactDAO = ContactDAOFactory.getContactDAO(dataSource);
+        attachmentDAO = AttachmentDAOFactory.getAttachmentDAO(dataSource);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class AddAttachmentCommand implements Command {
         Attachment attachment = fileManager.uploadAttachment(request, response);
 
         if (attachment != null)
-            contactDAO.createAttachment(attachment);
+            attachmentDAO.createAttachment(attachment);
         int contactId = ((Contact) request.getSession().getAttribute("CONTACT")).getId();
         return "main?command=editContact&contactId=" + contactId;
     }
