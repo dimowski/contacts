@@ -15,6 +15,14 @@
     color: red;
 }
 
+.gray {
+    color: gainsboro;
+}
+
+.blue {
+    color: blue;
+}
+
 .glyph-big {
     font-size: 20px;
 }

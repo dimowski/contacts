@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/validate.js"></script>
     <script src="js/tabswitch.js"></script>
+    <script src="js/guid.js"></script>
     <script src="js/checkall.js"></script>
     <script src="js/choosePopup.js"></script>
     <script src="js/popup.js"></script>
     <script src="js/addPhone.js"></script>
     <script src="js/editPhone.js"></script>
+    <script src="js/fileManipulation.js"></script>
     <script src="js/itemsAction.js" defer></script>
 </head>
 <body>
@@ -81,17 +84,17 @@
                                     <label for="firstName" class="col-sm-3 control-label">Имя</label>
                                     <div class="col-sm-4">
                                         <input type="text" value="${CONTACT.firstName}" class="form-control"
-                                               id="firstName" placeholder="Имя" name="firstName" autocomplete="off"
-                                               required>
+                                               id="firstName" placeholder="Имя" name="firstName" autocomplete="off">
                                     </div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertFirstName">Проверьте имя</div>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName" class="col-sm-3 control-label">Фамилия</label>
                                     <div class="col-sm-4">
                                         <input type="text" value="${CONTACT.lastName}" class="form-control"
-                                               id="lastName" placeholder="Фамилия" name="lastName" autocomplete="off"
-                                               required>
+                                               id="lastName" placeholder="Фамилия" name="lastName" autocomplete="off">
                                     </div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertLastName">Проверьте фамилию</div>
                                 </div>
                                 <div class="form-group">
                                     <label for="middleName" class="col-sm-3 control-label">Отчество</label>
@@ -192,9 +195,10 @@
                                 <div class="form-group">
                                     <label for="email" class="col-sm-3 control-label">Email</label>
                                     <div class="col-sm-4">
-                                        <input type="email" value="${CONTACT.email}" class="form-control" id="email"
+                                        <input type="text" value="${CONTACT.email}" class="form-control" id="email"
                                                placeholder="Email" name="email" autocomplete="off">
                                     </div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertEmail">Проверьте Email</div>
                                 </div>
                                 <div class="form-group">
                                     <label for="jobCurrent" class="col-sm-3 control-label">Место работы</label>
@@ -269,7 +273,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col col-xs-4">
-                                    <p class="panel-title">Всего телефонов: ${CONTACT.phones.size()}</p>
+                                    <p class="panel-title">Телефонов: ${CONTACT.phones.size()}</p>
                                 </div>
                                 <div class="col col-xs-8 text-right">
                                     <button onclick="show('phoneCreatePopup')" type="button"
@@ -333,7 +337,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col col-xs-4">
-                                    <p class="panel-title">Всего файлов: ${CONTACT.attachments.size()}</p>
+                                    <p class="panel-title">Файлов: ${CONTACT.attachments.size()}</p>
                                 </div>
                                 <div class="col col-xs-8 text-right">
                                     <button onclick="show('attachmentCreatePopup')" type="button"
@@ -346,7 +350,8 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
+                            <table id="fileTable" class="table table-hover table-bordered">
+                                <input type="hidden" id="filesForDel" name="filesForDel">
                                 <thead>
                                 <tr>
                                     <th>Имя файла</th>
@@ -358,23 +363,27 @@
                                 </thead>
                                 <tbody>
                                 <c:forEach var="tempAttachment" items="${CONTACT.attachments}">
-                                    <tr>
-                                        <td><a href="#">${tempAttachment.filename}</a></td>
-                                        <td class="text-center">
-                                            <fmt:formatDate value="${tempAttachment.uploadDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                                    <tr id="row${tempAttachment.id}">
+                                        <td><input id="fileId${tempAttachment.id}" name="fileId"
+                                                   value="${tempAttachment.id}" type="hidden">
+                                            <input type="hidden" value="${tempAttachment.comments}"
+                                                   id="fileComment${tempAttachment.id}" name="oldFileComment"><a
+                                                    role="button"
+                                                    onclick="editFilePopup(${tempAttachment.id})">${tempAttachment.filename}</a>
                                         </td>
-                                        <td>${tempAttachment.comments}</td>
                                         <td class="text-center">
-                                            <a href="getAttachment?fileName=${tempAttachment.filename}"><span
-                                                    class="glyphicon glyphicon-download-alt"
+                                            <fmt:formatDate value="${tempAttachment.uploadDate}"
+                                                            pattern="yyyy-MM-dd HH:mm:ss"/>
+                                        </td>
+                                        <td id="commentContent${tempAttachment.id}">${tempAttachment.comments}</td>
+                                        <td class="text-center">
+                                            <a href="getAttachment?fileName=${CONTACT.id}/${tempAttachment.filename}"><span
+                                                    class="glyphicon glyphicon-download-alt blue"
                                                     aria-hidden="true"></span></a>
                                         </td>
                                         <td class="text-center">
-                                            <c:url var="removeLink" value="main">
-                                                <c:param name="command" value="removeAttachment"/>
-                                                <c:param name="fileName" value="${tempAttachment.filename}"/>
-                                            </c:url>
-                                            <a onclick="show('confirmationPopup'); bindRemoveBtn('${removeLink}')">
+                                            <a role="button"
+                                               onclick="show('confirmationPopup'); bindRemoveBtn(${tempAttachment.id})">
                                                 <span class="glyphicon glyphicon-remove red" aria-hidden="true"></span></a>
                                         </td>
                                     </tr>
@@ -385,7 +394,7 @@
                     </div>
                 </div> <!-- end of div id="content_4" -->
                 <a class="btn btn-primary pull-right" type="button" href="main">Отмена</a>
-                <input type="submit" class="btn btn-primary pull-right" value="Сохранить" style="margin-right: 10px">
+                <input type="submit" onclick="return validateSave()" class="btn btn-primary pull-right" value="Сохранить" style="margin-right: 10px">
             </div>
         </form>
     </div>
@@ -394,20 +403,20 @@
 
 <!-- Popup for phone creating -->
 <div class="panel panel-default popup-phone" id="phoneCreatePopup">
-    <div class="form-group">
+    <div class="form-group" id="ncc">
         <label for="countryCode">Код страны</label>
         <input id="countryCode" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Код страны" required>
+               placeholder="Код страны" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="noc">
         <label for="operatorCode">Код оператора</label>
         <input id="operatorCode" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Код оператора">
+               placeholder="Код оператора" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="nph">
         <label for="phoneNumber">Номер телефона</label>
         <input id="phoneNumber" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Номер телефона" required>
+               placeholder="Номер телефона" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
     </div>
     <div class="form-group">
         <label for="phoneType">Тип телефона</label>
@@ -427,20 +436,20 @@
 
 <!-- Popup for phone editing -->
 <div class="panel panel-default popup-phone" id="phoneEditPopup">
-    <div class="form-group">
+    <div class="form-group" id="occ">
         <label for="countryCode">Код страны</label>
         <input id="newCountryCode" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Код страны" required>
+               placeholder="Код страны" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="ooc">
         <label for="operatorCode">Код оператора</label>
         <input id="newOperatorCode" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Код оператора">
+               placeholder="Код оператора" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="opn">
         <label for="phoneNumber">Номер телефона</label>
         <input id="newPhoneNumber" type="text" class="form-control" aria-describedby="basic-addon1"
-               placeholder="Номер телефона" required>
+               placeholder="Номер телефона" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
     </div>
     <div class="form-group">
         <label for="phoneType">Тип телефона</label>
@@ -459,30 +468,39 @@
     <button onclick="hide('phoneEditPopup')" class="btn btn-primary pull-right">Отмена</button>
 </div>
 
-<!-- Popup for attachment editing -->
+<!-- Popup for attachment creating -->
 <div class="panel panel-default popup-attachment" id="attachmentCreatePopup">
-    <form action="main" enctype="multipart/form-data" method="POST">
-        <div class="form-group">
-            <label for="fileName">Файл</label>
-            <input id="fileName" type="file" name="attachment">
-        </div>
-        <div class="form-group">
-            <label for="attachmentComments">Комментарий</label>
-            <input id="attachmentComments" type="text" class="form-control" name="comments"
-                   aria-describedby="basic-addon1"
-                   placeholder="Комментарий">
-        </div>
-        <input type="hidden" name="command" value="addAttachment">
-        <input value="Добавить" type="submit" class="btn btn-primary"/>
-        <button type="button" onclick="hide('attachmentCreatePopup')" class="btn btn-primary pull-right">Отмена</button>
-    </form>
+    <div class="form-group">
+        <label for="attachmentCreateComments">Комментарий</label>
+        <input id="attachmentCreateComments" type="text" class="form-control" name="comments"
+               aria-describedby="basic-addon1"
+               placeholder="Комментарий">
+    </div>
+    <button onclick="addFile(); hide('attachmentCreatePopup')" class="btn btn-primary">Сохранить</button>
+    <button type="button" onclick="hide('attachmentCreatePopup')" class="btn btn-primary pull-right">Отмена</button>
+</div>
+
+<!-- Popup for attachment editing -->
+<div class="panel panel-default popup-attachment" id="attachmentEditPopup">
+    <div class="form-group">
+        <label for="attachmentEditComments">Комментарий</label>
+        <input id="attachmentEditComments" type="text" class="form-control" name="comments"
+               aria-describedby="basic-addon1"
+               placeholder="Комментарий">
+    </div>
+    <button id="attachmentEditBtn" onclick="updateFile(this.value); hide('attachmentEditPopup')"
+            class="btn btn-primary">Сохранить
+    </button>
+    <button type="button" onclick="hide('attachmentEditPopup')" class="btn btn-primary pull-right">Отмена</button>
 </div>
 
 <div class="panel panel-default popupSmall" id="confirmationPopup">
     <h4 class="text-center">Удалить файл?</h4>
     <div class="row">
         <div class="col-sm-12">
-            <a type="button" class="btn btn-default popup-btn" id="confirmDelete" onclick="hide('confirmationPopup');">Да</a>
+            <button class="btn btn-default popup-btn" id="confirmDelete"
+                    onclick="hide('confirmationPopup'); deleteFile(this.value)">Да
+            </button>
             <button class="btn btn-default popup-btn pull-right" onclick="hide('confirmationPopup');">Нет</button>
         </div>
     </div>
@@ -502,6 +520,11 @@
 <div class="popupSmall" id="popupEmptySet">
     <h4 class="text-center">Выберите телефоны для удаления!</h4><br/>
     <button onclick="hide('popupEmptySet')" class="btn btn-default center-block">Ок</button>
+</div>
+
+<div class="popupSmall" id="alertValidation">
+    <h4 class="text-center">Проверьте введенные данные!</h4><br/>
+    <button onclick="hide('alertValidation')" class="btn btn-default center-block">Ок</button>
 </div>
 </body>
 </html>

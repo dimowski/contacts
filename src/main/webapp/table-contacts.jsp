@@ -25,8 +25,10 @@
                     <a href="${editLink}">${tempContact.firstName} ${tempContact.middleName} ${tempContact.lastName}</a>
                 </td>
                 <td class="text-center">
+                    <c:if test="${tempContact.birthday != null}">
                             <span class="glyphicon glyphicon-calendar" style="color:lightgray; font-size: 80%"
                                   aria-hidden="true"></span> ${tempContact.birthday}
+                    </c:if>
                 </td>
                 <td>${tempContact.address}</td>
                 <td>${tempContact.jobCurrent}</td>
@@ -36,9 +38,9 @@
     </table>
 
     <!---- Pagination ---->
-    <div class="panel-footer">
+    <div class="panel-footer text-center">
         <div class="row center-block">
-            <nav aria-label="Page navigation" class="pull-right">
+            <nav aria-label="Page navigation">
                 <c:if test="${PAGES_COUNT > 1}">
                     <ul class="pagination">
                         <c:choose>

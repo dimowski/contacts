@@ -16,7 +16,7 @@ public interface ContactDAO {
 
     void updateContact(Contact contact, int[] phoneIdForDelete);
 
-    void createContact(Contact contact);
+    int createContact(Contact contact);
 
     List<Contact> getContactsByTodayBirthday();
 

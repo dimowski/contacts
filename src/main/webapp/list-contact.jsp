@@ -41,13 +41,13 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col col-xs-4">
-                    <p class="panel-title">Всего контактов: ${CONTACTS_COUNT}</p>
+                    <p class="panel-title">Контактов: ${CONTACTS_COUNT}</p>
                 </div>
                 <div class="col col-xs-8 text-right">
                     <a href="main?command=createContact" type="button" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить контакт
                     </a>
-                    <a onclick="sendEmailToContacts()" class="btn btn-sm btn-primary btn-create">
+                    <a onclick="choosePopUp('e')" class="btn btn-sm btn-primary btn-create">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
                     </a>
                     <a onclick="choosePopUp()" class="btn btn-sm btn-primary btn-create">
@@ -74,7 +74,7 @@
 </div>
 
 <div class="popupSmall" id="popupEmptySet">
-    <h4 class="text-center">Выберите контакты для удаления!</h4><br/>
+    <h4 class="text-center">Выберите контакты!</h4><br/>
     <button onclick="hide('popupEmptySet')" class="btn btn-default center-block">Ок</button>
 </div>
 

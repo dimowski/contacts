@@ -28,10 +28,6 @@ public class CommandFactory {
                 return new CreateContactCommand();
             case "saveContact":
                 return new SaveContactCommand(dataSource);
-            case "removeAttachment":
-                return new RemoveAttachmentCommand(dataSource);
-            case "addAttachment":
-                return new AddAttachmentCommand(dataSource);
             case "emailForm":
                 return new FillEmailFormCommand();
             case "sendEmail":

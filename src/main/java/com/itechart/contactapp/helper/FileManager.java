@@ -15,10 +15,12 @@ public interface FileManager {
      * @param response
      * @return a {@code String} that contains the path to the uploaded file.
      */
-    Attachment uploadAttachment(HttpServletRequest request, HttpServletResponse response);
+    String[] uploadAttachment(HttpServletRequest request, HttpServletResponse response, int dir);
 
     String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response);
 
-    void removeAttachment(HttpServletRequest request, HttpServletResponse response);
+    void removeAttachment(int dir, String fileName);
+
+    void removeAllAttachments(int dir);
 
 }

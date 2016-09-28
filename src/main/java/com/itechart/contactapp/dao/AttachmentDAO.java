@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface AttachmentDAO {
 
-    void createAttachment(Attachment attachment);
+    void createAttachments(List<Attachment> attachments);
 
-    void removeAttachment(int contactId, String fileName);
+    String removeAttachment(int id);
+
+    void updateAttachments(List<Attachment> attachments);
 
     List<Attachment> getAttachmentsByContactId(int contactId);
 

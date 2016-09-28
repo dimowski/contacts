@@ -1,13 +1,18 @@
 package com.itechart.contactapp.command;
 
+import com.itechart.contactapp.dao.AttachmentDAO;
+import com.itechart.contactapp.dao.AttachmentDAOFactory;
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
 import com.itechart.contactapp.helper.FileManager;
 import com.itechart.contactapp.helper.FileManagerUtil;
 import com.itechart.contactapp.model.Address;
+import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.model.Phone;
 import com.itechart.contactapp.servlet.ContactControllerServlet;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,16 +28,20 @@ import java.util.List;
 
 public class SaveContactCommand implements Command {
 
-    private static final Logger log = LogManager.getLogger(EditContactCommand.class);
+    private static final Logger log = LogManager.getLogger(SaveContactCommand.class);
 
     private ContactDAO contactDAO;
+    private AttachmentDAO attachmentDAO;
 
     public SaveContactCommand(DataSource dataSource) {
         contactDAO = ContactDAOFactory.getContactDAO(dataSource);
+        attachmentDAO = AttachmentDAOFactory.getAttachmentDAO(dataSource);
     }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+        FileManager fileManager = new FileManagerUtil(ContactControllerServlet.properties);
+
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String middleName = request.getParameter("middleName");
@@ -49,7 +58,6 @@ public class SaveContactCommand implements Command {
         String status = request.getParameter("status");
         String email = request.getParameter("email");
         String jobCurrent = request.getParameter("jobCurrent");
-        FileManager fileManager = new FileManagerUtil(ContactControllerServlet.properties);
         String photo = fileManager.uploadProfilePhoto(request, response);
 
         String country = request.getParameter("country");
@@ -60,6 +68,8 @@ public class SaveContactCommand implements Command {
         String zipCode = request.getParameter("zipCode");
         Address theAddress = new Address(country, city, street, house, flat, zipCode);
 
+        log.debug("FILENAME {}", request.getParameter("attachment"));
+        //Parse phones
         List<Phone> phoneList = null;
         String[] phoneId = request.getParameterValues("phoneId");
         if (phoneId != null) {
@@ -73,12 +83,11 @@ public class SaveContactCommand implements Command {
                 //------VALIDATION NEED HERE!!!!------
                 Phone tempPhone = new Phone(Integer.parseInt(phoneId[i]), countryCode[i], operatorCode[i], phoneNumber[i], phoneType[i], comments[i]);
                 phoneList.add(tempPhone);
-                log.debug(tempPhone);
             }
         }
 
         int[] phoneIdForDelete = new int[0];
-        if (!request.getParameter("idsForDel").equals("")) {
+        if (StringUtils.isNotEmpty(request.getParameter("idsForDel"))) {
             String[] strPhoneIdForDel = request.getParameter("idsForDel").split("/");
             phoneIdForDelete = Arrays.stream(strPhoneIdForDel).mapToInt(Integer::parseInt).toArray();
         }
@@ -87,14 +96,56 @@ public class SaveContactCommand implements Command {
                 webSite, email, jobCurrent, theAddress, photo, phoneList);
 
         Contact oldContact = (Contact) request.getSession().getAttribute("CONTACT");
+        int contactId;
         if (oldContact != null) {
-            theContact.setId(oldContact.getId());
+            contactId = oldContact.getId();
+            theContact.setId(contactId);
             if (photo == null) {
                 theContact.setPhoto(oldContact.getPhoto());
             }
             contactDAO.updateContact(theContact, phoneIdForDelete);
         } else {
-            contactDAO.createContact(theContact);
+            contactId = contactDAO.createContact(theContact);
+        }
+
+        //Parse attachments
+        int[] fileIdForDelete;
+        if (StringUtils.isNotEmpty(request.getParameter("filesForDel"))) {
+            String[] strFileIdForDel = request.getParameter("filesForDel").split("/");
+            fileIdForDelete = Arrays.stream(strFileIdForDel).mapToInt(Integer::parseInt).toArray();
+            log.debug("REMOVE FILE COUNT {}", fileIdForDelete.length);
+            for (int id : fileIdForDelete) {
+                String fileName = attachmentDAO.removeAttachment(id);
+                fileManager.removeAttachment(contactId, fileName);
+            }
+        }
+
+        String[] fileId = request.getParameterValues("fileId");
+        if (fileId != null) {
+            List<Attachment> newFileList = new ArrayList<>();
+            List<Attachment> oldFileList = new ArrayList<>();
+            String[] fileComment = request.getParameterValues("newFileComment");
+            String[] oldFileComment = request.getParameterValues("oldFileComment");
+            int i = 0, j = 0;
+            for (String id : fileId) {
+                if (id.equals("0")) {
+                    String[] fileName = fileManager.uploadAttachment(request, response, contactId);
+                    //------VALIDATION NEED HERE!!!!------
+                    Attachment tempAttachment = new Attachment(Integer.parseInt(fileId[i]), fileName[i], new Date(), fileComment[i], contactId);
+                    newFileList.add(tempAttachment);
+                    log.debug(tempAttachment);
+                    i++;
+                } else {
+                    Attachment tempAttachment = new Attachment(Integer.parseInt(id), oldFileComment[j]);
+                    log.debug("UPDATE ATTACHMENT = {}", tempAttachment);
+                    oldFileList.add(tempAttachment);
+                    j++;
+                }
+            }
+            if (CollectionUtils.isNotEmpty(newFileList))
+                attachmentDAO.createAttachments(newFileList);
+            if (CollectionUtils.isNotEmpty(oldFileList))
+                attachmentDAO.updateAttachments(oldFileList);
         }
         return "main";
     }

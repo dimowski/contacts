@@ -5,7 +5,6 @@ import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.JdbcEscape;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.itechart.contactapp.model.Address;
-import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.model.Phone;
 import org.apache.logging.log4j.LogManager;
@@ -182,9 +181,10 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     @Override
-    public void createContact(Contact contact) {
+    public int createContact(Contact contact) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        int contactId = 0;
 
         try {
             connection = dataSource.getConnection();
@@ -216,20 +216,23 @@ public class ContactDAOUtil implements ContactDAO {
 
             preparedStatement.executeUpdate();
 
+            ResultSet contactKey = preparedStatement.getGeneratedKeys();
+            if (contactKey.next()) {
+                contactId = contactKey.getInt(1);
+                contact.setId(contactId);
+            } else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+
             if (contact.getPhones() != null) {
-                ResultSet contactKey = preparedStatement.getGeneratedKeys();
-                if (contactKey.next()) {
-                    contact.setId(contactKey.getInt(1));
-                } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
-                }
-                createPhones(connection, contact.getPhones(), contact.getId());
+                createPhones(connection, contact.getPhones(), contactId);
             }
         } catch (SQLException e) {
             log.error("Unable to create contact", e);
         } finally {
             close(connection, preparedStatement, null);
         }
+        return contactId;
     }
 
     @Override

@@ -11,6 +11,14 @@ public class Attachment {
     private Date uploadDate;
     private String comments;
 
+    public Attachment(int id, String filename, Date uploadDate, String comments, int contactId) {
+        this.id = id;
+        this.filename = filename;
+        this.uploadDate = uploadDate;
+        this.comments = comments;
+        this.contactId = contactId;
+    }
+
     public Attachment(int id, String filename, Date uploadDate, String comments) {
         this.id = id;
         this.filename = filename;
@@ -23,6 +31,11 @@ public class Attachment {
         this.uploadDate = uploadDate;
         this.comments = comments;
         this.contactId = contactId;
+    }
+
+    public Attachment(int i, String s) {
+        id = i;
+        comments = s;
     }
 
     @Override

@@ -9,7 +9,7 @@ var hide = function (id) {
     $(id).style.display = 'none';
 }
 
-function bindRemoveBtn(url) {
+function bindRemoveBtn(id) {
     var btn = document.getElementById('confirmDelete');
-    btn.setAttribute('href', url);
+    btn.value = id;
 }

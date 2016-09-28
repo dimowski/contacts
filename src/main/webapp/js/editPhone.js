@@ -18,8 +18,8 @@ function editPhone(id) {
     newOperatorCode.value = oldOperatorCode.value;
     newPhoneNumber.value = oldPhoneNumber.value;
 
-    for(var i = 0, j = newPhoneType.options.length; i < j; ++i) {
-        if(newPhoneType.options[i].innerHTML === oldPhoneType.value) {
+    for (var i = 0, j = newPhoneType.options.length; i < j; ++i) {
+        if (newPhoneType.options[i].innerHTML === oldPhoneType.value) {
             newPhoneType.selectedIndex = i;
             break;
         }
