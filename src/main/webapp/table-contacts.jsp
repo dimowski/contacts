@@ -41,45 +41,45 @@
     <div class="panel-footer text-center">
         <div class="row center-block">
             <nav aria-label="Page navigation">
-                <c:if test="${PAGES_COUNT > 1}">
+                <c:if test="${PAGINATOR.totalPages > 1}">
                     <ul class="pagination">
                         <c:choose>
-                            <c:when test="${CURRENT_PAGE != 1}">
+                            <c:when test="${PAGINATOR.prevPageActive}">
                                 <li>
                                     <a href="main?command=list&targetPage=prev" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
                             </c:when>
-                            <c:when test="${CURRENT_PAGE == 1}">
+                            <c:when test="${!PAGINATOR.prevPageActive}">
                                 <li class="disabled">
                                     <span aria-hidden="true">&laquo;</span>
                                 </li>
                             </c:when>
                         </c:choose>
-                        <c:forEach var="i" begin="1" end="${PAGES_COUNT}">
+                        <c:forEach var="i" items="${PAGINATOR.pages}">
                             <c:url var="targetPage" value="main">
                                 <c:param name="command" value="list"/>
                                 <c:param name="targetPage" value="${i}"/>
                             </c:url>
                             <c:choose>
-                                <c:when test="${CURRENT_PAGE == i}">
+                                <c:when test="${PAGINATOR.currentPage == i}">
                                     <li class="active"><a href="${targetPage}">${i}</a></li>
                                 </c:when>
-                                <c:when test="${CURRENT_PAGE != i}">
+                                <c:when test="${PAGINATOR.currentPage != i}">
                                     <li><a href="${targetPage}">${i}</a></li>
                                 </c:when>
                             </c:choose>
                         </c:forEach>
                         <c:choose>
-                            <c:when test="${CURRENT_PAGE != PAGES_COUNT}">
+                            <c:when test="${PAGINATOR.nextPageActive}">
                                 <li>
                                     <a href="main?command=list&targetPage=next" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>
                             </c:when>
-                            <c:when test="${CURRENT_PAGE == PAGES_COUNT}">
+                            <c:when test="${!PAGINATOR.nextPageActive}">
                                 <li class="disabled">
                                     <span aria-hidden="true">&raquo;</span>
                                 </li>

@@ -2,6 +2,7 @@ package com.itechart.contactapp.command;
 
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
+import com.itechart.contactapp.helper.Paginator;
 import com.itechart.contactapp.model.Contact;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,13 @@ public class ShowContactsCommand implements Command {
         int pagesCount = (int) Math.ceil(contactsCount / 10.0);
 
         request.setAttribute("CONTACTS_COUNT", contactsCount);
-        request.setAttribute("PAGES_COUNT", pagesCount);
+        ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //request.setAttribute("PAGES_COUNT", pagesCount);
+        request.setAttribute("PAGINATOR", Paginator.getPaginator(targetPage, pagesCount));
+
+
+
+
         request.getSession().setAttribute("CURRENT_PAGE", targetPage);
         request.getSession().setAttribute("CONTACT_LIST", contacts);
         return "/list-contact.jsp";
