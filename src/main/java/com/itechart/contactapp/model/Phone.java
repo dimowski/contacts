@@ -7,8 +7,6 @@ public class Phone {
     private String countryCode;
     private String operatorCode;
     private String phoneNumber;
-
-    //private long contactId;
     private String phoneType;
     private String comments;
 

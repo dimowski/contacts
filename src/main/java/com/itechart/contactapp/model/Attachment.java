@@ -26,13 +26,6 @@ public class Attachment {
         this.comments = comments;
     }
 
-    public Attachment(String filename, Date uploadDate, String comments, int contactId) {
-        this.filename = filename;
-        this.uploadDate = uploadDate;
-        this.comments = comments;
-        this.contactId = contactId;
-    }
-
     public Attachment(int i, String s) {
         id = i;
         comments = s;

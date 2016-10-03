@@ -1,4 +1,4 @@
-package com.itechart.contactapp.helper;
+package com.itechart.contactapp.mailing;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

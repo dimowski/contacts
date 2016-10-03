@@ -29,7 +29,8 @@
                         <span class="sr-only">(current)</span></a>
                 </li>
                 <li>
-                    <a href="search-contact.jsp"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск</a>
+                    <a href="search-contact.jsp"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        Поиск</a>
                 </li>
             </ul>
         </div>
@@ -57,9 +58,15 @@
             </div>
         </div>
 
-        <%@include file="table-contacts.jsp"%>
+        <c:if test="${CONTACTS_COUNT!=0}">
+            <%@include file="table-contacts.jsp" %>
+        </c:if>
 
     </div>
+
+    <c:if test="${CONTACTS_COUNT==0}">
+        <div class="alert alert-danger text-center" role="alert">Контакты не найдены</div>
+    </c:if>
 </div>
 <!-- Popup windows -->
 <div class="panel panel-default popupSmall" id="popupConfirm">

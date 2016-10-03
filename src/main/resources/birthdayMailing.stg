@@ -1,4 +1,8 @@
 birthday(contacts) ::= <<
-     Hi! This is a list of people born on this day:
+     Здравствуйте! У следующих людей сегодня день рождения:
     <contacts:{ contact |<\t><i>. <contact.firstName> <contact.lastName> <contact.middleName> (id:<contact.id>)<\n>}>
+>>
+
+emptyBirthday() ::= <<
+    Здравствуйте! Сегодня ни у кого нет дня рождения.
 >>

@@ -3,7 +3,6 @@ package com.itechart.contactapp.mailing;
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
 import com.itechart.contactapp.model.Contact;
-import com.itechart.contactapp.helper.EmailSender;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,16 +31,20 @@ public class DailyMailingJob implements Runnable {
         log.info("Checking contacts birthday");
         ContactDAO contactDAO = ContactDAOFactory.getContactDAO(dataSource);
         List<Contact> contacts = contactDAO.getContactsByTodayBirthday();
-
-        if (!CollectionUtils.isEmpty(contacts)) {
-            STGroup group = new STGroupFile("birthdayMailing.stg");
-            ST s = group.getInstanceOf("birthday");
-            s.add("contacts", contacts);
-            try {
+        log.debug("Today is birthday for {} contacts", contacts.size());
+        try {
+            if (!CollectionUtils.isEmpty(contacts)) {
+                STGroup group = new STGroupFile("birthdayMailing.stg");
+                ST s = group.getInstanceOf("birthday");
+                s.add("contacts", contacts);
                 EmailSender.generateAndSendEmail(properties, properties.getProperty("mail.admin.address"), "Birthday celebration", s.render());
-            } catch (MessagingException e) {
-                log.error(e);
+            } else {
+                STGroup group = new STGroupFile("birthdayMailing.stg");
+                ST s = group.getInstanceOf("emptyBirthday");
+                EmailSender.generateAndSendEmail(properties, properties.getProperty("mail.admin.address"), "Birthday celebration", s.render());
             }
+        } catch (MessagingException e) {
+            log.error(e);
         }
     }
 }

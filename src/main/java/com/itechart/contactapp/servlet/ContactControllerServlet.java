@@ -40,7 +40,7 @@ public class ContactControllerServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         Command command = CommandFactory.getCommand(request);
         String view = command.execute(request, response);
-        log.debug("VIEW {}", view);
+        log.debug("View: {}", view);
         try {
             if (!view.contains("main")) {
                 request.getRequestDispatcher(view).forward(request, response);

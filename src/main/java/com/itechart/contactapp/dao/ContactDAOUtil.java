@@ -301,17 +301,18 @@ public class ContactDAOUtil implements ContactDAO {
                 if (phonesForCreate.size() > 0) {
                     createPhones(connection, phonesForCreate, contact.getId());
                 }
-                if (phoneIdForDelete.length > 0) {
-                    String sql = "DELETE FROM phone WHERE phone_id=?";
-                    preparedStatement = connection.prepareStatement(sql);
-                    connection.setAutoCommit(false);
-                    for (int id : phoneIdForDelete) {
-                        preparedStatement.setInt(1, id);
-                        preparedStatement.addBatch();
-                    }
-                    preparedStatement.executeBatch();
-                    connection.commit();
+            }
+            if (phoneIdForDelete.length > 0) {
+                String sql = "DELETE FROM phone WHERE phone_id=?";
+                preparedStatement = connection.prepareStatement(sql);
+                connection.setAutoCommit(false);
+                for (int id : phoneIdForDelete) {
+                    preparedStatement.setInt(1, id);
+                    preparedStatement.addBatch();
+                    log.debug("SQL IS {}", preparedStatement.toString());
                 }
+                preparedStatement.executeBatch();
+                connection.commit();
             }
         } catch (SQLException e) {
             log.error("Unable to update contact", e);

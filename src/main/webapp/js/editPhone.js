@@ -34,6 +34,14 @@ function update() {
     var operatorCode = document.getElementById("newOperatorCode").value;
     var phoneNumber = document.getElementById("newPhoneNumber").value;
 
+    var phoneField = document.getElementById("opn");
+    if(phoneNumber.length === 0 || !phoneNumber.trim()) {
+        phoneField.className += " has-error";
+        return false;
+    } else {
+        phoneField.className = "form-group"
+    }
+
     document.getElementById("countryCode" + id).value = countryCode;
     document.getElementById("operatorCode" + id).value = operatorCode;
     document.getElementById("phoneNumber" + id).value = phoneNumber;
@@ -46,4 +54,6 @@ function update() {
 
     document.getElementById("phoneTypeLabel" + id).textContent = sel.options[sel.selectedIndex].text;
     document.getElementById("phoneCommentsLabel" + id).textContent = document.getElementById("newPhoneComments").value;
+
+    hide('phoneEditPopup');
 }

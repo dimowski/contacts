@@ -146,27 +146,6 @@
         </div>
     </div>
 
-    <%--<div class="panel panel-default" style="display: none">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col col-xs-4">
-                    <p class="panel-title">Найдено контактов: ${CONTACTS_COUNT}</p>
-                </div>
-                <div class="col col-xs-8 text-right">
-                    <a onclick="sendEmailToContacts()" class="btn btn-sm btn-primary btn-create">
-                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Отправить email
-                    </a>
-                    <a onclick="choosePopUp()" class="btn btn-sm btn-primary btn-create">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Удалить
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <c:set var="CONTACT_LIST" value="${SEARCH_RESULT}" scope="page"/>
-        <%@include file="table-contacts.jsp"%>
-    </div>--%>
-
 </div>
 </body>
 </html>

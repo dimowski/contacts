@@ -392,7 +392,7 @@
                         </div>
                     </div>
                 </div> <!-- end of div id="content_4" -->
-                <a class="btn btn-primary pull-right" type="button" href="main">Отмена</a>
+                <a class="btn btn-primary pull-right" type="button" href="main?command=list&targetPage=${CURRENT_PAGE}">Отмена</a>
                 <input type="submit" onclick="return validateSave()" class="btn btn-primary pull-right" value="Сохранить" style="margin-right: 10px">
             </div>
         </form>
@@ -429,7 +429,7 @@
         <input id="phoneComments" type="text" class="form-control" aria-describedby="basic-addon1"
                placeholder="Комментарий"><br/>
     </div>
-    <button onclick="addPhone();hide('phoneCreatePopup')" class="btn btn-primary">Добавить</button>
+    <button onclick="addPhone()" class="btn btn-primary">Добавить</button>
     <button onclick="hide('phoneCreatePopup')" class="btn btn-primary pull-right">Отмена</button>
 </div>
 
@@ -463,7 +463,7 @@
                placeholder="Комментарий"><br/>
     </div>
     <input type="hidden" id="phoneGUID">
-    <button onclick="update();hide('phoneEditPopup')" class="btn btn-primary">Сохранить</button>
+    <button onclick="update()" class="btn btn-primary">Сохранить</button>
     <button onclick="hide('phoneEditPopup')" class="btn btn-primary pull-right">Отмена</button>
 </div>
 

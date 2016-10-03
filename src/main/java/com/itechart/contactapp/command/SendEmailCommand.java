@@ -1,7 +1,7 @@
 package com.itechart.contactapp.command;
 
 import com.itechart.contactapp.model.Contact;
-import com.itechart.contactapp.helper.EmailSender;
+import com.itechart.contactapp.mailing.EmailSender;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,17 +28,19 @@ public class SendEmailCommand implements Command {
 
             List<String> idList = (List<String>) request.getSession().getAttribute("idForMailing");
             Map<Integer, Contact> contactMap = (Map<Integer, Contact>) request.getSession().getAttribute("CONTACT_LIST");
-            try {
-                for (String id : idList) {
-                    ST st = new ST(emailBody);
-                    Contact tempContact = contactMap.get(Integer.parseInt(id));
-                    st.add("contact", tempContact);
-                    log.debug("idList size {}", idList.size());
-                    EmailSender.generateAndSendEmail(properties, tempContact.getEmail(), subject, st.render());
+            new Thread(() -> {
+                try {
+                    for (String id : idList) {
+                        ST st = new ST(emailBody);
+                        Contact tempContact = contactMap.get(Integer.parseInt(id));
+                        st.add("contact", tempContact);
+                        log.debug("idList size {}", idList.size());
+                        EmailSender.generateAndSendEmail(properties, tempContact.getEmail(), subject, st.render());
+                    }
+                } catch (Exception e) {
+                    log.error(e);
                 }
-            } catch (Exception e) {
-                log.error(e);
-            }
+            }).start();
         }
         return "main";
     }

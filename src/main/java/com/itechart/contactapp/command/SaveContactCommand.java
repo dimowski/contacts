@@ -67,7 +67,6 @@ public class SaveContactCommand implements Command {
         String zipCode = request.getParameter("zipCode");
         Address theAddress = new Address(country, city, street, house, flat, zipCode);
 
-        log.debug("FILENAME {}", request.getParameter("attachment"));
         //Parse phones
         List<Phone> phoneList = null;
         String[] phoneId = request.getParameterValues("phoneId");
@@ -79,7 +78,6 @@ public class SaveContactCommand implements Command {
             String[] phoneNumber = request.getParameterValues("phoneNumber");
             String[] comments = request.getParameterValues("phoneComments");
             for (int i = 0; i < phoneId.length; i++) {
-                //------VALIDATION NEED HERE!!!!------
                 Phone tempPhone = new Phone(Integer.parseInt(phoneId[i]), countryCode[i], operatorCode[i], phoneNumber[i], phoneType[i], comments[i]);
                 phoneList.add(tempPhone);
             }
@@ -88,6 +86,7 @@ public class SaveContactCommand implements Command {
         int[] phoneIdForDelete = new int[0];
         if (StringUtils.isNotEmpty(request.getParameter("idsForDel"))) {
             String[] strPhoneIdForDel = request.getParameter("idsForDel").split("/");
+            log.debug("REMOVING {} PHONES", strPhoneIdForDel.length);
             phoneIdForDelete = Arrays.stream(strPhoneIdForDel).mapToInt(Integer::parseInt).toArray();
         }
 
@@ -114,7 +113,7 @@ public class SaveContactCommand implements Command {
         if (StringUtils.isNotEmpty(request.getParameter("filesForDel"))) {
             String[] strFileIdForDel = request.getParameter("filesForDel").split("/");
             fileIdForDelete = Arrays.stream(strFileIdForDel).mapToInt(Integer::parseInt).toArray();
-            log.debug("REMOVE FILE COUNT {}", fileIdForDelete.length);
+            log.debug("REMOVE FILES: {}", fileIdForDelete);
             for (int id : fileIdForDelete) {
                 String fileName = attachmentDAO.removeAttachment(id);
                 fileManager.removeAttachment(contactId, fileName);
@@ -131,7 +130,6 @@ public class SaveContactCommand implements Command {
             for (String id : fileId) {
                 if (id.equals("0")) {
                     String[] fileName = fileManager.uploadAttachment(request, response, contactId);
-                    //------VALIDATION NEED HERE!!!!------
                     Attachment tempAttachment = new Attachment(Integer.parseInt(fileId[i]), fileName[i], new Date(), fileComment[i], contactId);
                     newFileList.add(tempAttachment);
                     log.debug(tempAttachment);
