@@ -3,7 +3,7 @@ package com.itechart.contactapp.mailing;
 import com.itechart.contactapp.dao.ContactDAO;
 import com.itechart.contactapp.dao.ContactDAOFactory;
 import com.itechart.contactapp.model.Contact;
-import com.itechart.contactapp.service.EmailSender;
+import com.itechart.contactapp.helper.EmailSender;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

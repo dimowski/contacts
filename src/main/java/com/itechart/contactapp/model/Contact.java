@@ -36,8 +36,7 @@ public class Contact {
     }
 
     public Contact(String firstName, String lastName, String middleName, Date birthday, String status, String gender,
-                   String citizenship, String webSite, String email, String jobCurrent, Address address, String photo,
-                   List<Phone> phones) {
+                   String citizenship, String webSite, String email, String jobCurrent, Address address, List<Phone> phones) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -49,7 +48,6 @@ public class Contact {
         this.email = email;
         this.jobCurrent = jobCurrent;
         this.address = address;
-        this.photo = photo;
         this.phones = phones;
     }
 

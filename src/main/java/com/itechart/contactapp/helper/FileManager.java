@@ -1,7 +1,5 @@
 package com.itechart.contactapp.helper;
 
-import com.itechart.contactapp.model.Attachment;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,10 +15,9 @@ public interface FileManager {
      */
     String[] uploadAttachment(HttpServletRequest request, HttpServletResponse response, int dir);
 
-    String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response);
+    String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto);
 
     void removeAttachment(int dir, String fileName);
 
     void removeAllAttachments(int dir);
-
 }

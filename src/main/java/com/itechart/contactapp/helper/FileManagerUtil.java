@@ -57,7 +57,7 @@ public class FileManagerUtil implements FileManager {
     @Override
     public void removeAttachment(int dir, String fileName) {
         String path = properties.getProperty("users.attachments") + "/" + dir + "/" + fileName;
-        log.debug("{} WILL BE REMOVED!", path);
+        log.debug("Removing file {}", path);
         File deleteFile = new File(path);
         if (deleteFile.exists())
             deleteFile.delete();
@@ -68,28 +68,39 @@ public class FileManagerUtil implements FileManager {
         String path = properties.getProperty("users.attachments") + "/" + dir;
         File deleteFile = new File(path);
         if (deleteFile.exists()) {
-            log.debug("{} WILL BE REMOVED!", path);
+            log.debug("Removing file {}", path);
             FileUtils.deleteQuietly(deleteFile);
         }
     }
 
     @Override
-    public String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response) {
+    public String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto) {
         String fileName = null;
+
         try {
             Part filePart = request.getPart("profilePhoto");
             fileName = filePart.getSubmittedFileName();
             if (StringUtils.isEmpty(fileName))
-                return null;
+                return oldPhoto;
             InputStream fileContentStream = filePart.getInputStream();
             File repository = new File(properties.getProperty("users.photo"));
             if (!repository.exists()) {
                 repository.mkdirs();
             }
-            log.debug("FILE NAME = {}", fileName);
+            log.debug("Photo filename = {}", fileName);
 
-            File newPhoto = new File(repository, fileName);
+            String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            File newPhoto = File.createTempFile("usr", fileExtension, repository);
             Files.copy(fileContentStream, newPhoto.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            fileName = newPhoto.getName();
+
+            if (oldPhoto != null) {
+                String path = properties.getProperty("users.photo") + "/" + oldPhoto;
+                log.debug("Removing old file {}", path);
+                File deleteFile = new File(path);
+                if (deleteFile.exists())
+                    deleteFile.delete();
+            }
         } catch (Exception e) {
             log.error(e);
         }

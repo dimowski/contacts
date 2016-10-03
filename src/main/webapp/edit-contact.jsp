@@ -36,9 +36,8 @@
                             <img src="images/defaultUserIcon.png" class="img-rounded" alt="Profile photo"/>
                         </c:if>
                         <c:if test="${not empty CONTACT.photo}">
-                            <img class="contact-photo img-rounded"
-                                 src="/contactapp/getFile/<c:out value="${CONTACT.photo}"/>"
-                                 alt="Profile photo"/>
+                            <img class="contact-photo img-rounded" onerror="this.src='images/defaultUserIcon.png'"
+                                 src="/contactapp/getFile/${CONTACT.photo}" alt="Profile photo"/>
                         </c:if>
                     </label>
                     <input type="file" accept="image/*" id="file-input" name="profilePhoto"/>

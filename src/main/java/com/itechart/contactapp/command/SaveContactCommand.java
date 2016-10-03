@@ -58,7 +58,6 @@ public class SaveContactCommand implements Command {
         String status = request.getParameter("status");
         String email = request.getParameter("email");
         String jobCurrent = request.getParameter("jobCurrent");
-        String photo = fileManager.uploadProfilePhoto(request, response);
 
         String country = request.getParameter("country");
         String city = request.getParameter("city");
@@ -93,18 +92,20 @@ public class SaveContactCommand implements Command {
         }
 
         Contact theContact = new Contact(firstName, lastName, middleName, birthday, status, gender, citizenship,
-                webSite, email, jobCurrent, theAddress, photo, phoneList);
+                webSite, email, jobCurrent, theAddress, phoneList);
 
         Contact oldContact = (Contact) request.getSession().getAttribute("CONTACT");
         int contactId;
+        String photo;
         if (oldContact != null) {
             contactId = oldContact.getId();
             theContact.setId(contactId);
-            if (photo == null) {
-                theContact.setPhoto(oldContact.getPhoto());
-            }
+            photo = fileManager.uploadProfilePhoto(request, response, oldContact.getPhoto());
+            theContact.setPhoto(photo);
             contactDAO.updateContact(theContact, phoneIdForDelete);
         } else {
+            photo = fileManager.uploadProfilePhoto(request, response, null);
+            theContact.setPhoto(photo);
             contactId = contactDAO.createContact(theContact);
         }
 
@@ -147,6 +148,6 @@ public class SaveContactCommand implements Command {
             if (CollectionUtils.isNotEmpty(oldFileList))
                 attachmentDAO.updateAttachments(oldFileList);
         }
-        return "main";
+        return "main?command=list&targetPage=" + request.getSession().getAttribute("CURRENT_PAGE");
     }
 }

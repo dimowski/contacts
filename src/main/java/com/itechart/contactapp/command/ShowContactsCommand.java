@@ -45,13 +45,7 @@ public class ShowContactsCommand implements Command {
         int pagesCount = (int) Math.ceil(contactsCount / 10.0);
 
         request.setAttribute("CONTACTS_COUNT", contactsCount);
-        ///////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //request.setAttribute("PAGES_COUNT", pagesCount);
         request.setAttribute("PAGINATOR", Paginator.getPaginator(targetPage, pagesCount));
-
-
-
-
         request.getSession().setAttribute("CURRENT_PAGE", targetPage);
         request.getSession().setAttribute("CONTACT_LIST", contacts);
         return "/list-contact.jsp";
