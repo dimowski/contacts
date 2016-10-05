@@ -27,31 +27,37 @@ public class FileManagerUtil implements FileManager {
 
     @Override
     public String[] uploadAttachment(HttpServletRequest request, HttpServletResponse response, int dir) {
-        String[] fileName = null;
+        String[] fullFileName = null;
         try {
             List<Part> fileParts = request.getParts().stream().filter(part -> "attachment".equals(part.getName())).collect(Collectors.toList());
 
             int i = 0;
-            fileName = new String[fileParts.size()];
+            fullFileName = new String[fileParts.size()];
             log.debug("FILES COUNT {}", fileParts.size());
             for (Part filePart : fileParts) {
-                fileName[i] = filePart.getSubmittedFileName();
+                fullFileName[i] = filePart.getSubmittedFileName();
                 InputStream fileContent = filePart.getInputStream();
-                if (StringUtils.isEmpty(fileName[i]))
+                if (StringUtils.isEmpty(fullFileName[i]))
                     return null;
-                log.debug("UPLOAD LOCATION = {}, FILE NAME = {}", properties.getProperty("users.attachments"), fileName);
+                log.debug("UPLOAD LOCATION = {}, FILE NAME = {}", properties.getProperty("users.attachments"), fullFileName[i]);
                 File repository = new File(properties.getProperty("users.attachments") + "/" + dir);
                 if (!repository.exists()) {
                     repository.mkdirs();
                 }
-                File newAttachment = new File(repository, fileName[i]);
+                String[] tokens = fullFileName[i].split("\\.(?=[^\\.]+$)");
+                File newAttachment = new File(repository, fullFileName[i]);
+                for (int j = 2; newAttachment.exists(); j++) {
+                    log.debug("CHECK IF EXISTS: {}", newAttachment.getName());
+                    newAttachment = new File(repository, tokens[0] + "(" + j + ")." + tokens[1]);
+                }
+                fullFileName[i] = newAttachment.getName();
                 Files.copy(fileContent, newAttachment.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 i++;
             }
         } catch (Exception e) {
             log.error(e);
         }
-        return fileName;
+        return fullFileName;
     }
 
     @Override
@@ -74,12 +80,11 @@ public class FileManagerUtil implements FileManager {
     }
 
     @Override
-    public String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto) {
-        String fileName = null;
-
+    public String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto, int id) {
+        String fileExtension = null;
         try {
             Part filePart = request.getPart("profilePhoto");
-            fileName = filePart.getSubmittedFileName();
+            String fileName = filePart.getSubmittedFileName();
             if (StringUtils.isEmpty(fileName))
                 return oldPhoto;
             InputStream fileContentStream = filePart.getInputStream();
@@ -89,13 +94,13 @@ public class FileManagerUtil implements FileManager {
             }
             log.debug("Photo filename = {}", fileName);
 
-            String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
-            File newPhoto = File.createTempFile("usr", fileExtension, repository);
+            fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            File newPhoto = new File(repository, "user_id_" + id + fileExtension);
             Files.copy(fileContentStream, newPhoto.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            fileName = newPhoto.getName();
 
-            if (oldPhoto != null) {
-                String path = properties.getProperty("users.photo") + "/" + oldPhoto;
+            log.debug("OldExtension {}, NewExtension {}", oldPhoto, fileExtension);
+            if (!oldPhoto.equals(fileExtension)) {
+                String path = properties.getProperty("users.photo") + "/" + "user_id_" + id + oldPhoto;
                 log.debug("Removing old file {}", path);
                 File deleteFile = new File(path);
                 if (deleteFile.exists())
@@ -104,6 +109,6 @@ public class FileManagerUtil implements FileManager {
         } catch (Exception e) {
             log.error(e);
         }
-        return fileName;
+        return fileExtension;
     }
 }

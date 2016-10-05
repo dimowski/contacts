@@ -15,7 +15,7 @@ public interface FileManager {
      */
     String[] uploadAttachment(HttpServletRequest request, HttpServletResponse response, int dir);
 
-    String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto);
+    String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto, int contactId);
 
     void removeAttachment(int dir, String fileName);
 

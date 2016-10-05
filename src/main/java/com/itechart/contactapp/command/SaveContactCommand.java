@@ -99,13 +99,14 @@ public class SaveContactCommand implements Command {
         if (oldContact != null) {
             contactId = oldContact.getId();
             theContact.setId(contactId);
-            photo = fileManager.uploadProfilePhoto(request, response, oldContact.getPhoto());
+            photo = fileManager.uploadProfilePhoto(request, response, oldContact.getPhoto(), contactId);
             theContact.setPhoto(photo);
             contactDAO.updateContact(theContact, phoneIdForDelete);
         } else {
-            photo = fileManager.uploadProfilePhoto(request, response, null);
-            theContact.setPhoto(photo);
             contactId = contactDAO.createContact(theContact);
+            photo = fileManager.uploadProfilePhoto(request, response, null, contactId);
+            theContact.setPhoto(photo);
+            contactDAO.updateContact(theContact, null);
         }
 
         //Parse attachments
@@ -113,7 +114,7 @@ public class SaveContactCommand implements Command {
         if (StringUtils.isNotEmpty(request.getParameter("filesForDel"))) {
             String[] strFileIdForDel = request.getParameter("filesForDel").split("/");
             fileIdForDelete = Arrays.stream(strFileIdForDel).mapToInt(Integer::parseInt).toArray();
-            log.debug("REMOVE FILES: {}", fileIdForDelete);
+            log.debug("Removing files: {}", fileIdForDelete);
             for (int id : fileIdForDelete) {
                 String fileName = attachmentDAO.removeAttachment(id);
                 fileManager.removeAttachment(contactId, fileName);
@@ -127,18 +128,17 @@ public class SaveContactCommand implements Command {
             String[] fileComment = request.getParameterValues("newFileComment");
             String[] oldFileComment = request.getParameterValues("oldFileComment");
             int i = 0, j = 0;
+            String[] fileName = fileManager.uploadAttachment(request, response, contactId);
             for (String id : fileId) {
-                if (id.equals("0")) {
-                    String[] fileName = fileManager.uploadAttachment(request, response, contactId);
-                    Attachment tempAttachment = new Attachment(Integer.parseInt(fileId[i]), fileName[i], new Date(), fileComment[i], contactId);
+                if (id.equals("0") && fileName!=null) {
+                    Attachment tempAttachment = new Attachment(0, fileName[i], new Date(), fileComment[i], contactId);
                     newFileList.add(tempAttachment);
-                    log.debug(tempAttachment);
+                    log.debug("Creating attachment {}", tempAttachment);
                     i++;
                 } else {
-                    Attachment tempAttachment = new Attachment(Integer.parseInt(id), oldFileComment[j]);
+                    Attachment tempAttachment = new Attachment(Integer.parseInt(id), oldFileComment[j++]);
                     log.debug("UPDATE ATTACHMENT = {}", tempAttachment);
                     oldFileList.add(tempAttachment);
-                    j++;
                 }
             }
             if (CollectionUtils.isNotEmpty(newFileList))

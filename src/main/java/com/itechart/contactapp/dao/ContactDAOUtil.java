@@ -302,7 +302,7 @@ public class ContactDAOUtil implements ContactDAO {
                     createPhones(connection, phonesForCreate, contact.getId());
                 }
             }
-            if (phoneIdForDelete.length > 0) {
+            if (phoneIdForDelete!= null && phoneIdForDelete.length > 0) {
                 String sql = "DELETE FROM phone WHERE phone_id=?";
                 preparedStatement = connection.prepareStatement(sql);
                 connection.setAutoCommit(false);

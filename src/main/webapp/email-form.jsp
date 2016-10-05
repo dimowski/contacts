@@ -42,7 +42,7 @@
                     <span class="input-group-addon">
                         <input type="checkbox" id="templateEnable" onchange="setTemplate(sel)">
                     </span>
-                        <select id="sel" class="form-control" onchange="setTemplate(this)" name="template">
+                        <select id="sel" class="form-control" onchange="setTemplate(this)" name="template" disabled>
                             <option value="1">Шаблон 1</option>
                             <option value="2">Шаблон 2</option>
                         </select>

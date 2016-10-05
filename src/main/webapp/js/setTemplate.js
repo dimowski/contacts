@@ -1,5 +1,7 @@
 function setTemplate(t) {
+    var sel = document.getElementById("sel");
     if (document.getElementById("templateEnable").checked == true) {
+        sel.removeAttribute("disabled");
         var optionValue = t.value;
         switch (optionValue) {
             case "1":
@@ -14,5 +16,6 @@ function setTemplate(t) {
         }
     } else {
         document.getElementById("textarea").value = "";
+        sel.setAttribute("disabled", "");
     }
 }

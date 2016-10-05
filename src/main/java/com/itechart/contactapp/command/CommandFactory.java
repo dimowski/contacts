@@ -35,7 +35,7 @@ public class CommandFactory {
             case "search":
                 return new SearchContactsCommand(dataSource);
             default:
-                return null;
+                return new ShowContactsCommand(dataSource);
         }
     }
 }

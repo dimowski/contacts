@@ -37,7 +37,7 @@
                         </c:if>
                         <c:if test="${not empty CONTACT.photo}">
                             <img class="contact-photo img-rounded" onerror="this.src='images/defaultUserIcon.png'"
-                                 src="/contactapp/getFile/${CONTACT.photo}" alt="Profile photo"/>
+                                 src="/contactapp/getFile/user_id_${CONTACT.id}${CONTACT.photo}" alt="Profile photo"/>
                         </c:if>
                     </label>
                     <input type="file" accept="image/*" id="file-input" name="profilePhoto"/>
@@ -115,16 +115,16 @@
                                     <div class="col-sm-4">
                                         <select id="gender" class="form-control" name="gender">
                                             <c:if test="${CONTACT.gender == 'М'}">
-                                                <option selected="selected">М</option>
-                                                <option>Ж</option>
+                                                <option selected="selected" value="М">мужской</option>
+                                                <option VALUE="Ж">женский</option>
                                             </c:if>
                                             <c:if test="${CONTACT.gender == 'Ж'}">
-                                                <option>М</option>
-                                                <option selected="selected">Ж</option>
+                                                <option value="М">мужской</option>
+                                                <option selected="selected" value="Ж">женский</option>
                                             </c:if>
                                             <c:if test="${empty CONTACT}">
-                                                <option>М</option>
-                                                <option>Ж</option>
+                                                <option value="М">мужской</option>
+                                                <option value="Ж">женский</option>
                                             </c:if>
                                         </select>
                                     </div>

@@ -35,7 +35,11 @@ public class ShowContactsCommand implements Command {
                     targetPage = ((int) request.getSession().getAttribute("CURRENT_PAGE") - 1);
                     break;
                 default:
-                    targetPage = Integer.parseInt(targetPageParam);
+                    try {
+                        targetPage = Integer.parseInt(targetPageParam);
+                    } catch (Exception e) {
+                        targetPage = 1;
+                    }
                     break;
             }
         }

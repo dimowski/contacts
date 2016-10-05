@@ -41,7 +41,7 @@ public class DailyMailingJob implements Runnable {
             } else {
                 STGroup group = new STGroupFile("birthdayMailing.stg");
                 ST s = group.getInstanceOf("emptyBirthday");
-                EmailSender.generateAndSendEmail(properties, properties.getProperty("mail.admin.address"), "Birthday celebration", s.render());
+                EmailSender.generateAndSendEmail(properties, properties.getProperty("mail.admin.address"), "No birthday today", s.render());
             }
         } catch (MessagingException e) {
             log.error(e);
