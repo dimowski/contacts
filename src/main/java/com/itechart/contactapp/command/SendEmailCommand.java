@@ -42,6 +42,6 @@ public class SendEmailCommand implements Command {
                 }
             }).start();
         }
-        return "main";
+        return "/mailing-status.jsp";
     }
 }

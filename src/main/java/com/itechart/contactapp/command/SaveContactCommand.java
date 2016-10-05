@@ -95,6 +95,8 @@ public class SaveContactCommand implements Command {
 
         Contact oldContact = (Contact) request.getSession().getAttribute("CONTACT");
         int contactId;
+
+        //Check for photo
         String photo;
         if (oldContact != null) {
             contactId = oldContact.getId();

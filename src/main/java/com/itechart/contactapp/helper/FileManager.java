@@ -20,4 +20,6 @@ public interface FileManager {
     void removeAttachment(int dir, String fileName);
 
     void removeAllAttachments(int dir);
+
+    void deleteProfilePhoto(int id);
 }

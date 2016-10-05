@@ -16,6 +16,7 @@
     <script src="js/popup.js"></script>
     <script src="js/addPhone.js"></script>
     <script src="js/editPhone.js"></script>
+    <script src="js/deletePhoto.js"></script>
     <script src="js/fileManipulation.js"></script>
     <script src="js/itemsAction.js" defer></script>
 </head>
@@ -33,17 +34,24 @@
                 <div class="image-upload" style="display: inline-block">
                     <label for="file-input">
                         <c:if test="${empty CONTACT.photo}">
-                            <img src="images/defaultUserIcon.png" class="img-rounded" alt="Profile photo"/>
+                            <img id="userPhoto" src="images/defaultUserIcon.png" class="img-rounded"
+                                 alt="Profile photo"/>
                         </c:if>
                         <c:if test="${not empty CONTACT.photo}">
-                            <img class="contact-photo img-rounded" onerror="this.src='images/defaultUserIcon.png'"
-                                 src="/contactapp/getFile/user_id_${CONTACT.id}${CONTACT.photo}" alt="Profile photo"/>
+                            <img id="userPhoto" class="contact-photo img-rounded"
+                                 onerror="this.src='images/defaultUserIcon.png'"
+                                 src="/contactapp/getFile/${CONTACT.photo}" alt="Profile photo"/>
                         </c:if>
                     </label>
                     <input type="file" accept="image/*" id="file-input" name="profilePhoto"/>
+                    <c:if test="${not empty CONTACT.photo}">
+                        <a onclick="delPhoto(this)" class="btn btn-default btn-block">Удалить фото</a>
+                    </c:if>
+                </div>
+                <div>
+                    <input type="hidden" id="deletedPhoto" name="deletedPhoto" value="0">
                 </div>
             </div>
-
             <div class="col-sm-9">
                 <ul class="nav nav-tabs">
                     <li role="presentation" class="tabmenu active" id="tab_1">
@@ -85,7 +93,9 @@
                                         <input type="text" value="${CONTACT.firstName}" class="form-control"
                                                id="firstName" placeholder="Имя" name="firstName" autocomplete="off">
                                     </div>
-                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertFirstName">Проверьте имя</div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertFirstName">
+                                        Проверьте имя
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName" class="col-sm-3 control-label">Фамилия</label>
@@ -93,7 +103,9 @@
                                         <input type="text" value="${CONTACT.lastName}" class="form-control"
                                                id="lastName" placeholder="Фамилия" name="lastName" autocomplete="off">
                                     </div>
-                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertLastName">Проверьте фамилию</div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertLastName">
+                                        Проверьте фамилию
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="middleName" class="col-sm-3 control-label">Отчество</label>
@@ -108,6 +120,9 @@
                                     <div class="col-sm-4">
                                         <input type="date" value="${CONTACT.birthday}" class="form-control"
                                                id="birthday" placeholder="Дата рождения" name="birthday">
+                                    </div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertDate">Проверьте
+                                        дату рождения
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -197,7 +212,9 @@
                                         <input type="text" value="${CONTACT.email}" class="form-control" id="email"
                                                placeholder="Email" name="email" autocomplete="off">
                                     </div>
-                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertEmail">Проверьте Email</div>
+                                    <div class="col-sm-5 alert-danger" style="display: none" id="alertEmail">Проверьте
+                                        Email
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="jobCurrent" class="col-sm-3 control-label">Место работы</label>
@@ -393,7 +410,8 @@
                     </div>
                 </div> <!-- end of div id="content_4" -->
                 <a class="btn btn-primary pull-right" type="button" href="main?command=list&targetPage=${CURRENT_PAGE}">Отмена</a>
-                <input type="submit" onclick="return validateSave()" class="btn btn-primary pull-right" value="Сохранить" style="margin-right: 10px">
+                <input type="submit" onclick="return validateSave()" class="btn btn-primary pull-right"
+                       value="Сохранить" style="margin-right: 10px">
             </div>
         </form>
     </div>

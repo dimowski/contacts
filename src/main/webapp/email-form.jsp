@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/custom.css">
     <script src="js/setTemplate.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 </head>
 <body>
 <div class="container">

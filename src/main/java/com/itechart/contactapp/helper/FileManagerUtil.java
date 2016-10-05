@@ -81,12 +81,22 @@ public class FileManagerUtil implements FileManager {
 
     @Override
     public String uploadProfilePhoto(HttpServletRequest request, HttpServletResponse response, String oldPhoto, int id) {
-        String fileExtension = null;
+        String fileName = null;
         try {
             Part filePart = request.getPart("profilePhoto");
-            String fileName = filePart.getSubmittedFileName();
-            if (StringUtils.isEmpty(fileName))
+            fileName = filePart.getSubmittedFileName();
+            boolean deletePhoto = request.getParameter("deletedPhoto").equals("1");
+            if (StringUtils.isEmpty(fileName) && !deletePhoto)
                 return oldPhoto;
+            if (StringUtils.isEmpty(fileName) && deletePhoto) {
+                String path = properties.getProperty("users.photo") + "/" + oldPhoto;
+                log.debug("Removing old photo {}", path);
+                File deleteFile = new File(path);
+                if (deleteFile.exists())
+                    deleteFile.delete();
+                return null;
+            }
+
             InputStream fileContentStream = filePart.getInputStream();
             File repository = new File(properties.getProperty("users.photo"));
             if (!repository.exists()) {
@@ -94,14 +104,15 @@ public class FileManagerUtil implements FileManager {
             }
             log.debug("Photo filename = {}", fileName);
 
-            fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            String fileExtension = fileName.substring(fileName.lastIndexOf('.'));
             File newPhoto = new File(repository, "user_id_" + id + fileExtension);
+            fileName = newPhoto.getName();
             Files.copy(fileContentStream, newPhoto.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             log.debug("OldExtension {}, NewExtension {}", oldPhoto, fileExtension);
-            if (!oldPhoto.equals(fileExtension)) {
-                String path = properties.getProperty("users.photo") + "/" + "user_id_" + id + oldPhoto;
-                log.debug("Removing old file {}", path);
+            if (!oldPhoto.equals(newPhoto.getName())) {
+                String path = properties.getProperty("users.photo") + "/" + oldPhoto;
+                log.debug("Removing old photo {}", path);
                 File deleteFile = new File(path);
                 if (deleteFile.exists())
                     deleteFile.delete();
@@ -109,6 +120,18 @@ public class FileManagerUtil implements FileManager {
         } catch (Exception e) {
             log.error(e);
         }
-        return fileExtension;
+        return fileName;
+    }
+
+    @Override
+    public void deleteProfilePhoto(int id) {
+        String path = properties.getProperty("users.photo");
+        File[] files = new File(path + "/").listFiles();
+        for (File file : files) {
+            if (file.getName().contains("user_id_" + id)) {
+                log.debug("Deleting photo: {}", file.getName());
+                file.delete();
+            }
+        }
     }
 }

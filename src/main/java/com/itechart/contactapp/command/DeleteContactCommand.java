@@ -29,9 +29,10 @@ public class DeleteContactCommand implements Command {
         contactDAO.deleteContacts(contactsForDel);
         FileManager fm = new FileManagerUtil(ContactControllerServlet.properties);
         String[] ids = contactsForDel.split(",");
-        for (String id : ids)
+        for (String id : ids) {
             fm.removeAllAttachments(Integer.parseInt(id));
-
+            fm.deleteProfilePhoto(Integer.parseInt(id));
+        }
         return "main?targetPage=" + request.getSession().getAttribute("CURRENT_PAGE");
     }
 }
