@@ -10,7 +10,6 @@ import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Attachment;
 import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.model.Phone;
-import com.itechart.contactapp.servlet.ContactControllerServlet;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class SaveContactCommand implements Command {
 
@@ -40,7 +36,7 @@ public class SaveContactCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        FileManager fileManager = new FileManagerUtil(ContactControllerServlet.properties);
+        FileManager fileManager = new FileManagerUtil((Properties) request.getServletContext().getAttribute("contactapp.properties"));
 
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");

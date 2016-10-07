@@ -12,6 +12,7 @@ import org.stringtemplate.v4.STGroupFile;
 
 import javax.mail.MessagingException;
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,11 +38,17 @@ public class DailyMailingJob implements Runnable {
                 STGroup group = new STGroupFile("birthdayMailing.stg");
                 ST s = group.getInstanceOf("birthday");
                 s.add("contacts", contacts);
-                EmailSender.generateAndSendEmail(properties, properties.getProperty("mail.admin.address"), "Birthday celebration", s.render());
+                List<EmailLetter> letterList = new ArrayList<EmailLetter>() {{
+                    add(new EmailLetter(properties.getProperty("mail.admin.address"), "Birthday celebration", s.render()));
+                }};
+                EmailSender.generateAndSendEmail(properties, letterList);
             } else {
                 STGroup group = new STGroupFile("birthdayMailing.stg");
                 ST s = group.getInstanceOf("emptyBirthday");
-                EmailSender.generateAndSendEmail(properties, properties.getProperty("mail.admin.address"), "No birthday today", s.render());
+                List<EmailLetter> letterList = new ArrayList<EmailLetter>() {{
+                    add(new EmailLetter(properties.getProperty("mail.admin.address"), "No birthday today", s.render()));
+                }};
+                EmailSender.generateAndSendEmail(properties, letterList);
             }
         } catch (MessagingException e) {
             log.error(e);

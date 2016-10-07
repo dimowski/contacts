@@ -6,14 +6,13 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <display-name>Archetype Created Web Application</display-name>
 
-    <context-param>
-        <param-name>upload.location</param-name>
-        <param-value>/uploadedFiles</param-value>
-    </context-param>
-
     <welcome-file-list>
         <welcome-file>main</welcome-file>
     </welcome-file-list>
+
+    <error-page>
+        <location>/error-page</location>
+    </error-page>
 
     <servlet>
         <servlet-name>ContactControllerServlet</servlet-name>
@@ -27,6 +26,10 @@
         <servlet-name>ReturnFileServlet</servlet-name>
         <servlet-class>com.itechart.contactapp.servlet.ReturnFileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ExceptionHandler</servlet-name>
+        <servlet-class>com.itechart.contactapp.servlet.ContactExceptionHandler</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ContactControllerServlet</servlet-name>
@@ -39,5 +42,9 @@
     <servlet-mapping>
         <servlet-name>ReturnFileServlet</servlet-name>
         <url-pattern>/getAttachment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExceptionHandler</servlet-name>
+        <url-pattern>/error-page</url-pattern>
     </servlet-mapping>
 </web-app>

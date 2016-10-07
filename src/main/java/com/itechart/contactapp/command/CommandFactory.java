@@ -13,10 +13,10 @@ public class CommandFactory {
     public static Command getCommand(ServletRequest request) {
         DataSource dataSource = (DataSource) request.getServletContext().getAttribute("dataSource");
         String theCommand = request.getParameter("command");
-        log.info("Command = {}", theCommand);
         if (theCommand == null) {
             theCommand = "list";
         }
+        log.info("Command = {}", theCommand);
         switch (theCommand) {
             case "list":
                 return new ShowContactsCommand(dataSource);
@@ -35,7 +35,7 @@ public class CommandFactory {
             case "search":
                 return new SearchContactsCommand(dataSource);
             default:
-                return new ShowContactsCommand(dataSource);
+                return null;
         }
     }
 }

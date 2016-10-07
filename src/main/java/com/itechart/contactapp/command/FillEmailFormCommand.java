@@ -23,7 +23,7 @@ public class FillEmailFormCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         Map<Integer, Contact> contacts = (Map<Integer, Contact>) request.getSession().getAttribute("CONTACT_LIST");
         String id = request.getParameter("contacts");
-        log.debug("Contacts for mailing {}", id);
+        log.info("Contacts for mailing {}", id);
         String emailsStr = "";
         if (StringUtils.isNotEmpty(id)) {
             List<String> idList = Arrays.asList(id.split(","));

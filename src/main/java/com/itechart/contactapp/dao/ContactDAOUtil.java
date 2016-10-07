@@ -49,10 +49,10 @@ public class ContactDAOUtil implements ContactDAO {
                 }
             }
         } catch (ParseException e) {
-            log.error(e);
+            log.error("Unable to parse date", e);
         }
         String query = sql.validate().toString();
-        log.debug(query);
+        log.debug("Search sql query is: \"{}\"", query);
 
         Connection connection = null;
         Statement statement = null;
@@ -82,7 +82,6 @@ public class ContactDAOUtil implements ContactDAO {
                 String house = resultSet.getString("house");
                 String flat = resultSet.getString("flat");
                 String zipCode = resultSet.getString("zip_code");
-
                 Address address = new Address(country, city, street, house, flat, zipCode);
 
                 Contact theContact = new Contact(contactId, firstName, lastName, middleName, birthday, status, gender,
@@ -137,7 +136,6 @@ public class ContactDAOUtil implements ContactDAO {
         ResultSet resultSet = null;
 
         try {
-            log.info("Establishing connection to DB");
             connection = dataSource.getConnection();
             String sql = "SELECT * FROM contacts ORDER BY contact_id LIMIT 10 OFFSET ?";
             statement = connection.prepareStatement(sql);
@@ -164,14 +162,12 @@ public class ContactDAOUtil implements ContactDAO {
                 String house = resultSet.getString("house");
                 String flat = resultSet.getString("flat");
                 String zipCode = resultSet.getString("zip_code");
-
                 Address address = new Address(country, city, street, house, flat, zipCode);
 
                 Contact tempContact = new Contact(contactId, firstName, lastName, middleName, birthday, status, gender,
                         citizenship, webSite, email, jobCurrent, address, photo);
                 contacts.put(tempContact.getId(), tempContact);
             }
-            log.info(contacts.size() + " contacts retrieved");
         } catch (SQLException e) {
             log.error("Unable to get contact list", e);
         } finally {
@@ -271,6 +267,7 @@ public class ContactDAOUtil implements ContactDAO {
             preparedStatement.executeUpdate();
 
             List<Phone> phoneList = contact.getPhones();
+            //Checks, what phones must be created, or updated
             if (phoneList != null) {
                 List<Phone> phonesForUpdate = new ArrayList<>();
                 List<Phone> phonesForCreate = new ArrayList<>();
@@ -282,6 +279,7 @@ public class ContactDAOUtil implements ContactDAO {
                     }
                 }
                 if (phonesForUpdate.size() > 0) {
+                    log.info("Number of phones for update: {}", phonesForUpdate.size());
                     String sql = "UPDATE phone SET country_code=?, operator_code=?, phone_number=?, phone_type=?," +
                             "comments=? WHERE phone_id=?";
                     preparedStatement = connection.prepareStatement(sql);
@@ -299,17 +297,18 @@ public class ContactDAOUtil implements ContactDAO {
                     connection.commit();
                 }
                 if (phonesForCreate.size() > 0) {
+                    log.info("Number of phones for create: {}", phonesForCreate.size());
                     createPhones(connection, phonesForCreate, contact.getId());
                 }
             }
-            if (phoneIdForDelete!= null && phoneIdForDelete.length > 0) {
+            if (phoneIdForDelete != null && phoneIdForDelete.length > 0) {
+                log.info("Number of phones for deleting: {}", phoneIdForDelete.length);
                 String sql = "DELETE FROM phone WHERE phone_id=?";
                 preparedStatement = connection.prepareStatement(sql);
                 connection.setAutoCommit(false);
                 for (int id : phoneIdForDelete) {
                     preparedStatement.setInt(1, id);
                     preparedStatement.addBatch();
-                    log.debug("SQL IS {}", preparedStatement.toString());
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
@@ -340,7 +339,6 @@ public class ContactDAOUtil implements ContactDAO {
 
     @Override
     public int getContactsCount() {
-
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -354,7 +352,7 @@ public class ContactDAOUtil implements ContactDAO {
             resultSet.next();
 
             result = resultSet.getInt("count");
-            log.info("Returned {} contacts", result);
+            log.info("There are {} contacts in DB", result);
         } catch (SQLException e) {
             log.error("Unable to get contacts count", e);
         } finally {
@@ -364,7 +362,6 @@ public class ContactDAOUtil implements ContactDAO {
     }
 
     private void createPhones(Connection connection, List<Phone> phoneList, int contactId) throws SQLException {
-
         String sql = "INSERT INTO phone (contact_id, country_code, operator_code, phone_number, phone_type," +
                 "comments) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(sql);

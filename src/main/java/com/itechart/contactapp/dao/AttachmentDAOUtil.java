@@ -32,7 +32,6 @@ public class AttachmentDAOUtil implements AttachmentDAO {
                 sql += ",(?, ?, ?, ?)";
                 iterator.next();
             }
-            log.debug(sql);
             preparedStatement = connection.prepareStatement(sql);
             int i = 0;
             for (Attachment attachment : attachments) {
@@ -45,7 +44,7 @@ public class AttachmentDAOUtil implements AttachmentDAO {
             preparedStatement.execute();
         } catch (
                 SQLException e) {
-            log.error(e);
+            log.error("Unable to create attachment", e);
         } finally {
             ContactDAOUtil.close(connection, preparedStatement, null);
         }
@@ -71,7 +70,7 @@ public class AttachmentDAOUtil implements AttachmentDAO {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
-            log.error(e);
+            log.error("Unable to remove attachment", e);
         } finally {
             ContactDAOUtil.close(connection, preparedStatement, resultSet);
         }
@@ -96,7 +95,7 @@ public class AttachmentDAOUtil implements AttachmentDAO {
             connection.commit();
         } catch (
                 SQLException e) {
-            log.error(e);
+            log.error("Unable to update attachment", e);
         } finally {
             ContactDAOUtil.close(connection, preparedStatement, null);
         }
@@ -109,7 +108,6 @@ public class AttachmentDAOUtil implements AttachmentDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-
         try {
             connection = dataSource.getConnection();
             String sql = "SELECT * FROM attachment WHERE contact_id = ?";
@@ -122,7 +120,6 @@ public class AttachmentDAOUtil implements AttachmentDAO {
                 String filename = resultSet.getString("filename");
                 Date uploadDate = new Date(resultSet.getTimestamp("upload_date").getTime());
                 String comments = resultSet.getString("comments");
-                log.debug(uploadDate);
                 Attachment tempAttachment = new Attachment(id, filename, uploadDate, comments);
                 attachments.add(tempAttachment);
             }

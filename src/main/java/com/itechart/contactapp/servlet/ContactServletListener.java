@@ -27,20 +27,27 @@ public class ContactServletListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        Properties properties = new Properties();
+        log.info("Reading properties...");
+        Properties mailProp = new Properties();
+        Properties dirProp = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream input = classLoader.getResourceAsStream("mailServer.properties");
+        InputStream mailInput = classLoader.getResourceAsStream("mailServer.properties");
+        InputStream dirInput = classLoader.getResourceAsStream("contactapp.properties");
         try {
-            properties.load(input);
+            mailProp.load(mailInput);
+            dirProp.load(dirInput);
         } catch (IOException e) {
-            log.error("Unable to initialize properties file", e);
+            log.error("Unable to load properties file", e);
         }
         servletContextEvent.getServletContext().setAttribute("dataSource", dataSource);
-        servletContextEvent.getServletContext().setAttribute("mailing.properties", properties);
+        servletContextEvent.getServletContext().setAttribute("mailing.properties", mailProp);
+        servletContextEvent.getServletContext().setAttribute("contactapp.properties", dirProp);
+        log.info("Servlet properties loaded.");
 
+        log.info("Starting daily mailing service...");
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new DailyMailingJob(dataSource, properties), 0, 1, TimeUnit.DAYS);
-        log.info("Daily mailing service started.");
+        scheduler.scheduleAtFixedRate(new DailyMailingJob(dataSource, mailProp), 0, 1, TimeUnit.DAYS);
+        log.info("Daily mailing service started successfully.");
     }
 
     @Override

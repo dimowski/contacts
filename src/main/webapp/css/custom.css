@@ -101,4 +101,15 @@
 
 .input-group-cust {
     margin-right: 15px;
+    margin-left: 108px;
+}
+
+div.centered {
+    height: 50%;
+    display: flex;
+    align-items: center
+}
+
+div.centered h3 {
+    margin: 0;
 }
