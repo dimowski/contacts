@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.Map;
 
 public class ShowContactsCommand implements Command {
@@ -34,9 +33,13 @@ public class ShowContactsCommand implements Command {
             switch (targetPageParam) {
                 case "next":
                     targetPage = ((int) request.getSession().getAttribute("CURRENT_PAGE")) + 1;
+                    if (targetPage > pagesCount)
+                        targetPage = pagesCount;
                     break;
                 case "prev":
                     targetPage = ((int) request.getSession().getAttribute("CURRENT_PAGE") - 1);
+                    if (targetPage < 1)
+                        targetPage = 1;
                     break;
                 default:
                     try {
