@@ -45,7 +45,7 @@ public class ShowContactsCommand implements Command {
                         log.error("Target page is not number! Unable to parse.");
                         return "error";
                     }
-                    if (targetPage < 1 || targetPage > pagesCount) {
+                    if (targetPage < 1 || (targetPage > pagesCount && pagesCount != 0)) {
                         log.error("Target page {} out of range!", targetPage);
                         return "error";
                     }
