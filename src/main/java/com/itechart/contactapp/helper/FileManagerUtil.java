@@ -127,10 +127,12 @@ public class FileManagerUtil implements FileManager {
     public void deleteProfilePhoto(int id) {
         String path = properties.getProperty("users.photo");
         File[] files = new File(path + "/").listFiles();
-        for (File file : files) {
-            if (file.getName().contains("user_id_" + id)) {
-                log.debug("Deleting photo: {}", file.getName());
-                file.delete();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().contains("user_id_" + id)) {
+                    log.debug("Deleting photo: {}", file.getName());
+                    file.delete();
+                }
             }
         }
     }

@@ -11,7 +11,7 @@
     </welcome-file-list>
 
     <error-page>
-        <location>/error-page</location>
+        <location>/error</location>
     </error-page>
 
     <servlet>
@@ -45,6 +45,6 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExceptionHandler</servlet-name>
-        <url-pattern>/error-page</url-pattern>
+        <url-pattern>/error</url-pattern>
     </servlet-mapping>
 </web-app>

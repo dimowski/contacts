@@ -37,7 +37,7 @@ function validateSave() {
 
     for (var index in files) {
         if (files[index].value == "")
-            isOk = false
+            isOk = false;
     }
     if (!isOk) {
         show("alertValidation");

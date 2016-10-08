@@ -29,6 +29,7 @@ public class EmailSender {
         String sendFrom = mailServerProperties.getProperty("mail.send.from");
         String pass = mailServerProperties.getProperty("mail.send.password");
         transport.connect(host, sendFrom, pass);
+        log.info("Preparing to send {} emails", letterList.size());
         for (EmailLetter letter : letterList) {
             generateMailMessage = new MimeMessage(mailSession);
             generateMailMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(letter.getEmailRecipient()));

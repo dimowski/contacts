@@ -26,15 +26,16 @@ public class ReturnFileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String requestedFile = properties.getProperty("users.attachments") + "/" + request.getParameter("fileName");
+        File theFile = new File(requestedFile);
+        if (!theFile.exists()) {
+            log.error("Requested file = {} not found!", requestedFile);
+            throw new ServletException("File not found!");
+        }
         String fileExtension = requestedFile.substring(requestedFile.lastIndexOf('.'));
-        log.debug("Requested file = " + requestedFile);
+        log.debug("Requested file = {}", requestedFile);
 
         response.setContentType(fileExtension);
-
-        response.setHeader("Content-disposition", "attachment; filename=" + requestedFile);
-
-        File theFile = new File(requestedFile);
-
+        response.setHeader("Content-disposition", "attachment; filename=" + requestedFile.substring(requestedFile.lastIndexOf('/') + 1));
         OutputStream out = response.getOutputStream();
         FileInputStream in = new FileInputStream(theFile);
         byte[] buffer = new byte[4096];

@@ -23,7 +23,7 @@ function addFile() {
     cell1.appendChild(file);
     cell2.innerHTML = "<input id='fileId" + GUID + "' type='hidden' name='fileId' value='0'>" + "не загружен";
     cell3.innerHTML = "<input id='fileComment" + GUID + "' type='hidden' name='newFileComment' value='" + comments.value + "'>" + comments.value;
-    cell4.innerHTML = "<span class='glyphicon glyphicon-download-alt grey' aria-hidden='true'></span>";
+    cell4.innerHTML = "";
     cell5.innerHTML = "<a role='button' onclick=show('" + lnk + "');bindRemoveBtn('" + GUID + "')><span class='glyphicon glyphicon-remove red' aria-hidden='true'></span></a>";
 
     document.getElementById("attachmentCreateComments").value = "";

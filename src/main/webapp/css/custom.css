@@ -113,3 +113,16 @@ div.centered {
 div.centered h3 {
     margin: 0;
 }
+
+.make-low {
+    margin-top: 150px;
+}
+
+.make-low2 {
+    margin-top: 50px;
+}
+
+.error-code {
+    font-size: 150px;
+    color: #c12e2a;
+}

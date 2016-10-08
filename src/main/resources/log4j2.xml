@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" name="ContactApp" packages="">
     <Appenders>
-        <File name="RollingFile" fileName="dk_app_logs/contactapp.log"
-                     filePattern="dk_app_logs/contactapp-%d{MM-dd-yyyy}-%i.log" append="false">
+        <File name="FileAppender" fileName="dk-contactapp/contactapp.log" append="false">
             <PatternLayout>
                 <Pattern>%d [%p] %c{1}.%M %m%n</Pattern>
             </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="20 KB"/>
-            </Policies>
         </File>
     </Appenders>
     <Loggers>
         <Root level="debug">
-            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="FileAppender"/>
         </Root>
     </Loggers>
 </Configuration>

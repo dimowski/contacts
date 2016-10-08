@@ -28,14 +28,14 @@
         </div>
     </nav>
     <div class="col-sm-6 centered">
-        <div class="col">
+        <div class="col make-low">
             <h2>OOPS! YOU BROKE EVERYTHING.</h2>
             <img src="images/error-image.png" alt="Error image"/>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="make-low2 col-sm-6">
         <h1>HTTP ERROR:</h1>
-        <b><p style="font-size: 100px; color: #c12e2a">${ERROR_STATUS}</p></b>
+        <b><p class="error-code">${ERROR_STATUS}</p></b>
     </div>
 </div>
 </body>

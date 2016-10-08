@@ -25,6 +25,10 @@ public class ContactExceptionHandler extends HttpServlet {
 
     private void processError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        if(statusCode == null) {
+            statusCode = 400;
+        }
+        log.error("Redirected to error page, ERROR CODE: {}", statusCode);
         request.setAttribute("ERROR_STATUS", statusCode);
         request.getRequestDispatcher("error-page.jsp").forward(request, response);
     }
