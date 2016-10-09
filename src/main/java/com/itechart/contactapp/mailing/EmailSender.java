@@ -38,5 +38,6 @@ public class EmailSender {
             transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
         }
         transport.close();
+        log.info("Emails has been sent successfully");
     }
 }

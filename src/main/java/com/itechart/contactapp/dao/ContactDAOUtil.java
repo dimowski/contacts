@@ -4,6 +4,8 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.JdbcEscape;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.itechart.contactapp.helper.FileManager;
+import com.itechart.contactapp.helper.FileManagerUtil;
 import com.itechart.contactapp.model.Address;
 import com.itechart.contactapp.model.Contact;
 import com.itechart.contactapp.model.Phone;
@@ -219,7 +221,6 @@ public class ContactDAOUtil implements ContactDAO {
             } else {
                 throw new SQLException("Creating user failed, no ID obtained.");
             }
-
             if (contact.getPhones() != null) {
                 createPhones(connection, contact.getPhones(), contactId);
             }
@@ -379,6 +380,24 @@ public class ContactDAOUtil implements ContactDAO {
         statement.executeBatch();
         connection.commit();
         statement.close();
+    }
+
+    @Override
+    public void setProfilePhoto(String photo, int contactId) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            String sql = "UPDATE contacts SET photo=? WHERE contact_id=?";
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, photo);
+            statement.setInt(2, contactId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            close(connection, statement, null);
+        }
     }
 
     public static void close(Connection connection, Statement statement, ResultSet resultSet) {

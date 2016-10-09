@@ -1,5 +1,7 @@
--- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
---
+CREATE USER IF NOT EXISTS 'itechart'@'localhost' IDENTIFIED BY 'itechart';
+CREATE DATABASE IF NOT EXISTS dmitry_kach_db;
+GRANT ALL PRIVILEGES ON dmitry_kach_db. * TO 'itechart'@'localhost';
+
 -- Host: localhost    Database: dmitry_kach_db
 -- ------------------------------------------------------
 -- Server version	5.7.12-log

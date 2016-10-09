@@ -103,8 +103,7 @@ public class SaveContactCommand implements Command {
         } else {
             contactId = contactDAO.createContact(theContact);
             photo = fileManager.uploadProfilePhoto(request, response, null, contactId);
-            theContact.setPhoto(photo);
-            contactDAO.updateContact(theContact, null);
+            contactDAO.setProfilePhoto(photo, contactId);
         }
 
         //Parse attachments

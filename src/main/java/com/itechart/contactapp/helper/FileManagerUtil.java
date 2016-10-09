@@ -110,7 +110,7 @@ public class FileManagerUtil implements FileManager {
             Files.copy(fileContentStream, newPhoto.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             log.debug("OldExtension {}, NewExtension {}", oldPhoto, fileExtension);
-            if (!oldPhoto.equals(newPhoto.getName())) {
+            if (oldPhoto != null && !oldPhoto.equals(newPhoto.getName())) {
                 String path = properties.getProperty("users.photo") + "/" + oldPhoto;
                 log.debug("Removing old photo {}", path);
                 File deleteFile = new File(path);

@@ -6,6 +6,9 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>dk-contactapp Webapp</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>

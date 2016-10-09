@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" name="ContactApp" packages="">
     <Appenders>
-        <File name="FileAppender" fileName="dk-contactapp/contactapp.log" append="false">
+        <File name="FileAppender" fileName="dk-contact-logs/contactapp.log" append="false">
             <PatternLayout>
                 <Pattern>%d [%p] %c{1}.%M %m%n</Pattern>
             </PatternLayout>

@@ -14,6 +14,8 @@ public interface ContactDAO {
 
     void updateContact(Contact contact, int[] phoneIdForDelete);
 
+    void setProfilePhoto(String photo, int contactId);
+
     int createContact(Contact contact);
 
     List<Contact> getContactsByTodayBirthday();
